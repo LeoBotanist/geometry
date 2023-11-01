@@ -441,6 +441,7 @@ Board.prototype.clearPath = function(clickedButton) {
   }
 
   document.getElementById("startButtonStart").onclick = () => {
+    console.log("start button clicked! 1")
     if (!this.currentAlgorithm) {
       document.getElementById("startButtonStart").innerHTML = '<button class="btn btn-default navbar-btn" type="button">Pick an Algorithm!</button>'
     } else {
@@ -749,6 +750,7 @@ Board.prototype.toggleButtons = function() {
     this.buttonsOn = true;
 
     document.getElementById("startButtonStart").onclick = () => {
+      console.log("start button clicked! 2")
       if (!this.currentAlgorithm) {
         document.getElementById("startButtonStart").innerHTML = '<button class="btn btn-default navbar-btn" type="button">Pick an Algorithm!</button>'
       } else {

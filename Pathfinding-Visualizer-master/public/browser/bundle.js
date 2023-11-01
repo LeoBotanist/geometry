@@ -379,6 +379,8 @@ Board.prototype.createGrid = function() {
       } else if (r === Math.floor(this.height / 2) && c === Math.floor(3 * this.width / 4)) {
         newNodeClass = "target";
         this.target = `${newNodeId}`;
+      } else if (r === Math.floor(this.height / 2) + 1 && c === Math.floor(this.width / 4)) {
+        newNodeClass = "start";
       } else {
         newNodeClass = "unvisited";
       }
@@ -1920,7 +1922,11 @@ function astar(nodes, start, target, nodesToAnimate, boardArray, name, heuristic
   let unvisitedNodes = Object.keys(nodes);
   while (unvisitedNodes.length) {
     let currentNode = closestNode(nodes, unvisitedNodes);
-    while (currentNode.status === "wall" && unvisitedNodes.length) {
+    let currentCoordinates = currentNode.id.split("-");
+    let x1 = parseInt(currentCoordinates[0]);
+    let y1 = parseInt(currentCoordinates[1]);
+    let bodyX = x1 + 1
+    while ((x1 === boardArray.length - 1 || currentNode.status === "wall" || boardArray[x1 + 1][y1].status === "wall") && unvisitedNodes.length) {
       currentNode = closestNode(nodes, unvisitedNodes)
     }
     if (currentNode.distance === Infinity) return false;
@@ -1982,44 +1988,24 @@ function getNeighbors(id, nodes, boardArray) {
   let potentialNeighbor;
   if (boardArray[x - 1] && boardArray[x - 1][y]) {
     potentialNeighbor = `${(x - 1).toString()}-${y.toString()}`
-    if (nodes[potentialNeighbor].status !== "wall") neighbors.push(potentialNeighbor);
+    potentialBodyNode = `${(x).toString()}-${y.toString()}`
+    if (nodes[potentialNeighbor].status !== "wall" && nodes[potentialBodyNode].status !== "wall") neighbors.push(potentialNeighbor);
   }
   if (boardArray[x + 1] && boardArray[x + 1][y]) {
     potentialNeighbor = `${(x + 1).toString()}-${y.toString()}`
-    if (nodes[potentialNeighbor].status !== "wall") neighbors.push(potentialNeighbor);
+    potentialBodyNode = `${(x + 2).toString()}-${y.toString()}`
+    if (nodes[potentialNeighbor].status !== "wall" && nodes[potentialBodyNode].status !== "wall") neighbors.push(potentialNeighbor);
   }
   if (boardArray[x][y - 1]) {
     potentialNeighbor = `${x.toString()}-${(y - 1).toString()}`
-    if (nodes[potentialNeighbor].status !== "wall") neighbors.push(potentialNeighbor);
+    potentialBodyNode = `${(x + 1).toString()}-${(y - 1).toString()}`
+    if (nodes[potentialNeighbor].status !== "wall" && nodes[potentialBodyNode].status !== "wall") neighbors.push(potentialNeighbor);
   }
   if (boardArray[x][y + 1]) {
     potentialNeighbor = `${x.toString()}-${(y + 1).toString()}`
-    if (nodes[potentialNeighbor].status !== "wall") neighbors.push(potentialNeighbor);
+    potentialBodyNode = `${(x + 1).toString()}-${(y + 1).toString()}`
+    if (nodes[potentialNeighbor].status !== "wall" && nodes[potentialBodyNode].status !== "wall") neighbors.push(potentialNeighbor);
   }
-  // if (boardArray[x - 1] && boardArray[x - 1][y - 1]) {
-  //   potentialNeighbor = `${(x - 1).toString()}-${(y - 1).toString()}`
-  //   let potentialWallOne = `${(x - 1).toString()}-${y.toString()}`
-  //   let potentialWallTwo = `${x.toString()}-${(y - 1).toString()}`
-  //   if (nodes[potentialNeighbor].status !== "wall" && !(nodes[potentialWallOne].status === "wall" && nodes[potentialWallTwo].status === "wall")) neighbors.push(potentialNeighbor);
-  // }
-  // if (boardArray[x + 1] && boardArray[x + 1][y - 1]) {
-  //   potentialNeighbor = `${(x + 1).toString()}-${(y - 1).toString()}`
-  //   let potentialWallOne = `${(x + 1).toString()}-${y.toString()}`
-  //   let potentialWallTwo = `${x.toString()}-${(y - 1).toString()}`
-  //   if (nodes[potentialNeighbor].status !== "wall" && !(nodes[potentialWallOne].status === "wall" && nodes[potentialWallTwo].status === "wall")) neighbors.push(potentialNeighbor);
-  // }
-  // if (boardArray[x - 1] && boardArray[x - 1][y + 1]) {
-  //   potentialNeighbor = `${(x - 1).toString()}-${(y + 1).toString()}`
-  //   let potentialWallOne = `${(x - 1).toString()}-${y.toString()}`
-  //   let potentialWallTwo = `${x.toString()}-${(y + 1).toString()}`
-  //   if (nodes[potentialNeighbor].status !== "wall" && !(nodes[potentialWallOne].status === "wall" && nodes[potentialWallTwo].status === "wall")) neighbors.push(potentialNeighbor);
-  // }
-  // if (boardArray[x + 1] && boardArray[x + 1][y + 1]) {
-  //   potentialNeighbor = `${(x + 1).toString()}-${(y + 1).toString()}`
-  //   let potentialWallOne = `${(x + 1).toString()}-${y.toString()}`
-  //   let potentialWallTwo = `${x.toString()}-${(y + 1).toString()}`
-  //   if (nodes[potentialNeighbor].status !== "wall" && !(nodes[potentialWallOne].status === "wall" && nodes[potentialWallTwo].status === "wall")) neighbors.push(potentialNeighbor);
-  // }
   return neighbors;
 }
 
