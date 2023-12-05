@@ -363,7 +363,7 @@ function Board1(height, width) {
 Board1.prototype.initialise = function() {
   this.createGrid();
   this.addEventListeners();
-  this.toggleTutorialButtons();
+  // this.toggleTutorialButtons();
 };
 
 Board1.prototype.createGrid = function() {
@@ -1446,18 +1446,19 @@ function Board2(height, width) {
 
 
 Board2.prototype.initialise = function() {
+  console.log("board2 init");
   this.createGrid();
   this.addEventListeners();
-  this.toggleTutorialButtons();
+  // this.toggleTutorialButtons();
 };
 
 Board2.prototype.createGrid = function() {
   let tableHTML = "";
   for (let r = 0; r < this.height; r++) {
     let currentArrayRow = [];
-    let currentHTMLRow = `<tr id="row ${r}">`;
+    let currentHTMLRow = `<tr id="board2_row ${r}">`;
     for (let c = 0; c < this.width; c++) {
-      let newNodeId = `${r}-${c}`, newNodeClass, newNode;
+      let newNodeId = `$board2_${r}-${c}`, newNodeClass, newNode;
       if (r === Math.floor(this.height / 2) && c === Math.floor(this.width / 4)) {
         newNodeClass = "start";
         this.start = `${newNodeId}`;
@@ -1469,7 +1470,7 @@ Board2.prototype.createGrid = function() {
       }
       newNode = new Node(newNodeId, newNodeClass);
       currentArrayRow.push(newNode);
-      currentHTMLRow += `<td id="${newNodeId}" class="${newNodeClass}"></td>`;
+      currentHTMLRow += `<td id="board2_${newNodeId}" class="${newNodeClass}"></td>`;
       this.nodes[`${newNodeId}`] = newNode;
     }
     this.boardArray.push(currentArrayRow);
@@ -2507,8 +2508,11 @@ let height = Math.floor(($(document).height() - navbarHeight - textHeight) / 28)
 let width = Math.floor($(document).width() / 25);
 let newBoard = new Board1(height, width)
 let newBoard2 = new Board2(height, width)
-newBoard.initialise();
+console.log("starting")
+newBoard.initialise(); // exception, program stopped
+console.log("board 1 finished!")
 newBoard2.initialise();
+console.log("board 2 finished!")
 
 // To-do - Changes to be made beyond this point for board 2 event handling
 window.onkeydown = (e) => {
