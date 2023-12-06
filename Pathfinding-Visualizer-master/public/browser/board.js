@@ -15,7 +15,7 @@ const simpleDemonstration = require("./mazeAlgorithms/simpleDemonstration");
 const bidirectional = require("./pathfindingAlgorithms/bidirectional");
 const getDistance = require("./getDistance");
 // update
-const floyd_warshall = require("./pathfindingAlgorithms/weightedSearchAlgorithm")
+// const floyd_warshall = require("./pathfindingAlgorithms/weightedSearchAlgorithm")
 // 
 
 function Board(height, width) {
@@ -473,19 +473,19 @@ Board.prototype.clearPath = function(clickedButton) {
         this.algoDone = true;
       } 
       // update
-      else if (this.currentAlgorithm == "floyd_warshall"){
-        if (!this.numberOfObjects) {
-          success = weightedSearchAlgorithm(this.nodes, this.start, this.target, this.nodesToAnimate, this.boardArray, this.currentAlgorithm, this.currentHeuristic);
-          launchAnimations(this, success, "weighted");
-        } else {
-          this.isObject = true;
-          // success = weightedSearchAlgorithm(this.nodes, this.start, this.object, this.objectNodesToAnimate, this.boardArray, this.currentAlgorithm, this.currentHeuristic);
-          // launchAnimations(this, success, "weighted", "object", this.currentAlgorithm, this.currentHeuristic);
-        }
-        this.algoDone = true;
+      // else if (this.currentAlgorithm == "floyd_warshall"){
+      //   if (!this.numberOfObjects) {
+      //     success = weightedSearchAlgorithm(this.nodes, this.start, this.target, this.nodesToAnimate, this.boardArray, this.currentAlgorithm, this.currentHeuristic);
+      //     launchAnimations(this, success, "weighted");
+      //   } else {
+      //     this.isObject = true;
+      //     // success = weightedSearchAlgorithm(this.nodes, this.start, this.object, this.objectNodesToAnimate, this.boardArray, this.currentAlgorithm, this.currentHeuristic);
+      //     // launchAnimations(this, success, "weighted", "object", this.currentAlgorithm, this.currentHeuristic);
+      //   }
+      //   this.algoDone = true;
 
 
-      }
+      // }
       // 
       
       
@@ -604,17 +604,17 @@ Board.prototype.instantAlgorithm = function() {
     this.algoDone = true;
   }
   // update
-  else if (this.currentAlgorithm === "floyd_warshall") {
-    if (!this.numberOfObjects) {
-      success = weightedSearchAlgorithm(this.nodes, this.start, this.target, this.nodesToAnimate, this.boardArray, this.currentAlgorithm, this.currentHeuristic);
-      launchInstantAnimations(this, success, "weighted");
-    } else {
-      this.isObject = true;
-      success = weightedSearchAlgorithm(this.nodes, this.start, this.object, this.objectNodesToAnimate, this.boardArray, this.currentAlgorithm, this.currentHeuristic);
-      launchInstantAnimations(this, success, "weighted", "object", this.currentAlgorithm);
-    }
-    this.algoDone = true;
-  }
+  // else if (this.currentAlgorithm === "floyd_warshall") {
+  //   if (!this.numberOfObjects) {
+  //     success = weightedSearchAlgorithm(this.nodes, this.start, this.target, this.nodesToAnimate, this.boardArray, this.currentAlgorithm, this.currentHeuristic);
+  //     launchInstantAnimations(this, success, "weighted");
+    // } else {
+    //   this.isObject = true;
+    //   success = weightedSearchAlgorithm(this.nodes, this.start, this.object, this.objectNodesToAnimate, this.boardArray, this.currentAlgorithm, this.currentHeuristic);
+    //   launchInstantAnimations(this, success, "weighted", "object", this.currentAlgorithm);
+    // }
+    // this.algoDone = true;
+  // }
   // 
   if (weightedAlgorithms.includes(this.currentAlgorithm)) {
     if (!this.numberOfObjects) {
@@ -674,10 +674,10 @@ Board.prototype.changeStartNodeImages = function() {
     name = "Breath-first Search";
   }
   // update
-  else if (this.currentAlgorithm === "floyd_warshall") {
-    name = "Floyd-Warshall";
-    console.log("here0")
-  }
+  // else if (this.currentAlgorithm === "floyd_warshall") {
+  //   name = "Floyd-Warshall";
+  //   console.log("here0")
+  // }
   //  
   else if (this.currentAlgorithm === "dfs") {
     name = "Depth-first Search";
@@ -821,17 +821,17 @@ Board.prototype.toggleButtons = function() {
           this.algoDone = true;
         } 
         // update
-        else if (this.currentAlgorithm === "floyd_warshall") {
-          if (!this.numberOfObjects) {
-            success = weightedSearchAlgorithm(this.nodes, this.start, this.target, this.nodesToAnimate, this.boardArray, this.currentAlgorithm, this.currentHeuristic);
-            launchAnimations(this, success, "weighted");
-          } else {
-            this.isObject = true;
-            success = weightedSearchAlgorithm(this.nodes, this.start, this.object, this.objectNodesToAnimate, this.boardArray, this.currentAlgorithm, this.currentHeuristic);
-            launchAnimations(this, success, "weighted", "object", this.currentAlgorithm);
-          }
-          this.algoDone = true;
-        } 
+        // else if (this.currentAlgorithm === "floyd_warshall") {
+        //   if (!this.numberOfObjects) {
+        //     success = weightedSearchAlgorithm(this.nodes, this.start, this.target, this.nodesToAnimate, this.boardArray, this.currentAlgorithm, this.currentHeuristic);
+        //     launchAnimations(this, success, "weighted");
+        //   } else {
+        //     this.isObject = true;
+        //     success = weightedSearchAlgorithm(this.nodes, this.start, this.object, this.objectNodesToAnimate, this.boardArray, this.currentAlgorithm, this.currentHeuristic);
+        //     launchAnimations(this, success, "weighted", "object", this.currentAlgorithm);
+        //   }
+        //   this.algoDone = true;
+        // } 
         // 
         
         else if (weightedAlgorithms.includes(this.currentAlgorithm)) {
@@ -906,11 +906,11 @@ Board.prototype.toggleButtons = function() {
     }
 
     // update
-    document.getElementById("startButtonFloyd").onclick = () => {
-      document.getElementById("startButtonStart").innerHTML = '<button id="actualStartButton" class="btn btn-default navbar-btn" type="button">Visualize Floyd-Warshall\'s!</button>'
-      this.currentAlgorithm = "floyd_warshall";
-      this.changeStartNodeImages();
-    }
+    // document.getElementById("startButtonFloyd").onclick = () => {
+    //   document.getElementById("startButtonStart").innerHTML = '<button id="actualStartButton" class="btn btn-default navbar-btn" type="button">Visualize Floyd-Warshall\'s!</button>'
+    //   this.currentAlgorithm = "floyd_warshall";
+    //   this.changeStartNodeImages();
+    // }
     // 
 
     document.getElementById("startButtonAStar").onclick = () => {

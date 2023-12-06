@@ -777,10 +777,11 @@ Board.prototype.clearPath = function(clickedButton) {
         if (!this.numberOfObjects) {
           success = weightedSearchAlgorithm(this.nodes, this.start, this.target, this.nodesToAnimate, this.boardArray, this.currentAlgorithm, this.currentHeuristic);
           launchAnimations(this, success, "weighted");
-        } else {
+        } 
+        else {
           this.isObject = true;
-          // success = weightedSearchAlgorithm(this.nodes, this.start, this.object, this.objectNodesToAnimate, this.boardArray, this.currentAlgorithm, this.currentHeuristic);
-          // launchAnimations(this, success, "weighted", "object", this.currentAlgorithm, this.currentHeuristic);
+          success = weightedSearchAlgorithm(this.nodes, this.start, this.object, this.objectNodesToAnimate, this.boardArray, this.currentAlgorithm, this.currentHeuristic);
+          launchAnimations(this, success, "weighted", "object", this.currentAlgorithm, this.currentHeuristic);
         }
         this.algoDone = true;
       }
@@ -2770,6 +2771,9 @@ function weightedSearchAlgorithm(nodes, start, target, nodesToAnimate, boardArra
     if (name === "CLA" || name === "greedy") {
       updateNeighbors(nodes, currentNode, boardArray, target, name, start, heuristic);
     } else if (name === "dijkstra") {
+      updateNeighbors(nodes, currentNode, boardArray);
+    // update
+    } else if (name === "floyd_warshall") {
       updateNeighbors(nodes, currentNode, boardArray);
     }
   }
