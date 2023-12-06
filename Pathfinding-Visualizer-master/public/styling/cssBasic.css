@@ -448,7 +448,7 @@
   height: 25px;
 }
 
-#startButtonStart {
+#startButtonStart1, #startButtonStart2 {
   padding-left: 20px;
   padding-right: 20px;
 }
