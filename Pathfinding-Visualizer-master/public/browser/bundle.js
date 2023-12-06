@@ -2534,6 +2534,10 @@ window.onkeyup = (e) => {
 function getDistance(nodeOne, nodeTwo) {
   let currentCoordinates = nodeOne.id.split("-");
   let targetCoordinates = nodeTwo.id.split("-");
+  if (nodeOne.id[0] === "b") {
+    currentCoordinates = nodeOne.id.slice(7).split("-");
+    targetCoordinates = nodeTwo.id.slice(7).split("-");
+  }
   let x1 = parseInt(currentCoordinates[0]);
   let y1 = parseInt(currentCoordinates[1]);
   let x2 = parseInt(targetCoordinates[0]);
@@ -3131,6 +3135,10 @@ function getNeighbors(id, nodes, boardArray) {
 function getDistance(nodeOne, nodeTwo) {
   let currentCoordinates = nodeOne.id.split("-");
   let targetCoordinates = nodeTwo.id.split("-");
+  if (nodeOne.id[0] === "b") {
+    currentCoordinates = nodeOne.id.slice(7).split("-");
+    targetCoordinates = nodeTwo.id.slice(7).split("-");
+  }
   let x1 = parseInt(currentCoordinates[0]);
   let y1 = parseInt(currentCoordinates[1]);
   let x2 = parseInt(targetCoordinates[0]);
@@ -3286,6 +3294,10 @@ function getDistance(nodeOne, nodeTwo) {
 function manhattanDistance(nodeOne, nodeTwo) {
   let nodeOneCoordinates = nodeOne.id.split("-").map(ele => parseInt(ele));
   let nodeTwoCoordinates = nodeTwo.id.split("-").map(ele => parseInt(ele));
+  if (nodeOne.id[0] === "b") {
+    currentCoordinates = nodeOne.id.slice(7).split("-").map(ele => parseInt(ele));
+    targetCoordinates = nodeTwo.id.slice(7).split("-").map(ele => parseInt(ele));
+  }
   let xOne = nodeOneCoordinates[0];
   let xTwo = nodeTwoCoordinates[0];
   let yOne = nodeOneCoordinates[1];
@@ -3411,24 +3423,29 @@ function updateNodeTwo(currentNode, targetNode, actualTargetNode, name, nodes, a
 
 function getNeighbors(id, nodes, boardArray) {
   let coordinates = id.split("-");
+  let prefix = ""
+  if (id[0] === "b") {
+    coordinates = id.slice(7).split("-");
+    prefix = "board2_"
+  }
   let x = parseInt(coordinates[0]);
   let y = parseInt(coordinates[1]);
   let neighbors = [];
   let potentialNeighbor;
   if (boardArray[x - 1] && boardArray[x - 1][y]) {
-    potentialNeighbor = `${(x - 1).toString()}-${y.toString()}`
+    potentialNeighbor = `${prefix}${(x - 1).toString()}-${y.toString()}`
     if (nodes[potentialNeighbor].status !== "wall") neighbors.push(potentialNeighbor);
   }
   if (boardArray[x + 1] && boardArray[x + 1][y]) {
-    potentialNeighbor = `${(x + 1).toString()}-${y.toString()}`
+    potentialNeighbor = `${prefix}${(x + 1).toString()}-${y.toString()}`
     if (nodes[potentialNeighbor].status !== "wall") neighbors.push(potentialNeighbor);
   }
   if (boardArray[x][y - 1]) {
-    potentialNeighbor = `${x.toString()}-${(y - 1).toString()}`
+    potentialNeighbor = `${prefix}${x.toString()}-${(y - 1).toString()}`
     if (nodes[potentialNeighbor].status !== "wall") neighbors.push(potentialNeighbor);
   }
   if (boardArray[x][y + 1]) {
-    potentialNeighbor = `${x.toString()}-${(y + 1).toString()}`
+    potentialNeighbor = `${prefix}${x.toString()}-${(y + 1).toString()}`
     if (nodes[potentialNeighbor].status !== "wall") neighbors.push(potentialNeighbor);
   }
   return neighbors;
@@ -3437,6 +3454,10 @@ function getNeighbors(id, nodes, boardArray) {
 function getDistance(nodeOne, nodeTwo) {
   let currentCoordinates = nodeOne.id.split("-");
   let targetCoordinates = nodeTwo.id.split("-");
+  if (nodeOne.id[0] === "b") {
+    currentCoordinates = nodeOne.id.slice(7).split("-");
+    targetCoordinates = nodeTwo.id.slice(7).split("-");
+  }
   let x1 = parseInt(currentCoordinates[0]);
   let y1 = parseInt(currentCoordinates[1]);
   let x2 = parseInt(targetCoordinates[0]);
@@ -3488,6 +3509,10 @@ function getDistance(nodeOne, nodeTwo) {
 function getDistanceTwo(nodeOne, nodeTwo) {
   let currentCoordinates = nodeOne.id.split("-");
   let targetCoordinates = nodeTwo.id.split("-");
+  if (nodeOne.id[0] === "b") {
+    currentCoordinates = nodeOne.id.slice(7).split("-");
+    targetCoordinates = nodeTwo.id.slice(7).split("-");
+  }
   let x1 = parseInt(currentCoordinates[0]);
   let y1 = parseInt(currentCoordinates[1]);
   let x2 = parseInt(targetCoordinates[0]);
@@ -3539,6 +3564,10 @@ function getDistanceTwo(nodeOne, nodeTwo) {
 function manhattanDistance(nodeOne, nodeTwo) {
   let nodeOneCoordinates = nodeOne.id.split("-").map(ele => parseInt(ele));
   let nodeTwoCoordinates = nodeTwo.id.split("-").map(ele => parseInt(ele));
+  if (nodeOne.id[0] === "b") {
+    nodeOneCoordinates = nodeOne.id.slice(7).split("-").map(ele => parseInt(ele));
+    nodeTwoCoordinates = nodeTwo.id.slice(7).split("-").map(ele => parseInt(ele));
+  }
   let xChange = Math.abs(nodeOneCoordinates[0] - nodeTwoCoordinates[0]);
   let yChange = Math.abs(nodeOneCoordinates[1] - nodeTwoCoordinates[1]);
   return (xChange + yChange);
@@ -3547,6 +3576,14 @@ function manhattanDistance(nodeOne, nodeTwo) {
 function weightedManhattanDistance(nodeOne, nodeTwo, nodes) {
   let nodeOneCoordinates = nodeOne.id.split("-").map(ele => parseInt(ele));
   let nodeTwoCoordinates = nodeTwo.id.split("-").map(ele => parseInt(ele));
+  let nodeOneId = nodeOne.Id.split("-");
+  let prefix = ""
+  if (nodeOne.id[0] === "b") {
+    nodeOneCoordinates = nodeOne.id.slice(7).split("-").map(ele => parseInt(ele));
+    nodeTwoCoordinates = nodeTwo.id.slice(7).split("-").map(ele => parseInt(ele));
+    prefix = "board2_"
+    nodeOneId = nodeOne.Id.slice(7).split("-");
+  }
   let xChange = Math.abs(nodeOneCoordinates[0] - nodeTwoCoordinates[0]);
   let yChange = Math.abs(nodeOneCoordinates[1] - nodeTwoCoordinates[1]);
 
@@ -3555,12 +3592,12 @@ function weightedManhattanDistance(nodeOne, nodeTwo, nodes) {
     let additionalxChange = 0,
         additionalyChange = 0;
     for (let currentx = nodeOneCoordinates[0]; currentx <= nodeTwoCoordinates[0]; currentx++) {
-      let currentId = `${currentx}-${nodeOne.id.split("-")[1]}`;
+      let currentId = `${prefix}${currentx}-${nodeOneId[1]}`;
       let currentNode = nodes[currentId];
       additionalxChange += currentNode.weight;
     }
     for (let currenty = nodeOneCoordinates[1]; currenty <= nodeTwoCoordinates[1]; currenty++) {
-      let currentId = `${nodeTwoCoordinates[0]}-${currenty}`;
+      let currentId = `${prefix}${nodeTwoCoordinates[0]}-${currenty}`;
       let currentNode = nodes[currentId];
       additionalyChange += currentNode.weight;
     }
@@ -3568,12 +3605,12 @@ function weightedManhattanDistance(nodeOne, nodeTwo, nodes) {
     let otherAdditionalxChange = 0,
         otherAdditionalyChange = 0;
     for (let currenty = nodeOneCoordinates[1]; currenty <= nodeTwoCoordinates[1]; currenty++) {
-      let currentId = `${nodeOne.id.split("-")[0]}-${currenty}`;
+      let currentId = `${prefix}${nodeOneId[0]}-${currenty}`;
       let currentNode = nodes[currentId];
       additionalyChange += currentNode.weight;
     }
     for (let currentx = nodeOneCoordinates[0]; currentx <= nodeTwoCoordinates[0]; currentx++) {
-      let currentId = `${currentx}-${nodeTwoCoordinates[1]}`;
+      let currentId = `${prefix}${currentx}-${nodeTwoCoordinates[1]}`;
       let currentNode = nodes[currentId];
       additionalxChange += currentNode.weight;
     }
@@ -3589,12 +3626,12 @@ function weightedManhattanDistance(nodeOne, nodeTwo, nodes) {
     let additionalxChange = 0,
         additionalyChange = 0;
     for (let currentx = nodeOneCoordinates[0]; currentx <= nodeTwoCoordinates[0]; currentx++) {
-      let currentId = `${currentx}-${nodeOne.id.split("-")[1]}`;
+      let currentId = `${prefix}${currentx}-${nodeOneId[1]}`;
       let currentNode = nodes[currentId];
       additionalxChange += currentNode.weight;
     }
     for (let currenty = nodeOneCoordinates[1]; currenty >= nodeTwoCoordinates[1]; currenty--) {
-      let currentId = `${nodeTwoCoordinates[0]}-${currenty}`;
+      let currentId = `${prefix}${nodeTwoCoordinates[0]}-${currenty}`;
       let currentNode = nodes[currentId];
       additionalyChange += currentNode.weight;
     }
@@ -3602,12 +3639,12 @@ function weightedManhattanDistance(nodeOne, nodeTwo, nodes) {
     let otherAdditionalxChange = 0,
         otherAdditionalyChange = 0;
     for (let currenty = nodeOneCoordinates[1]; currenty >= nodeTwoCoordinates[1]; currenty--) {
-      let currentId = `${nodeOne.id.split("-")[0]}-${currenty}`;
+      let currentId = `${prefix}${nodeOneId[0]}-${currenty}`;
       let currentNode = nodes[currentId];
       additionalyChange += currentNode.weight;
     }
     for (let currentx = nodeOneCoordinates[0]; currentx <= nodeTwoCoordinates[0]; currentx++) {
-      let currentId = `${currentx}-${nodeTwoCoordinates[1]}`;
+      let currentId = `${prefix}${currentx}-${nodeTwoCoordinates[1]}`;
       let currentNode = nodes[currentId];
       additionalxChange += currentNode.weight;
     }
@@ -3623,12 +3660,12 @@ function weightedManhattanDistance(nodeOne, nodeTwo, nodes) {
     let additionalxChange = 0,
         additionalyChange = 0;
     for (let currentx = nodeOneCoordinates[0]; currentx >= nodeTwoCoordinates[0]; currentx--) {
-      let currentId = `${currentx}-${nodeOne.id.split("-")[1]}`;
+      let currentId = `${prefix}${currentx}-${nodeOneId[1]}`;
       let currentNode = nodes[currentId];
       additionalxChange += currentNode.weight;
     }
     for (let currenty = nodeOneCoordinates[1]; currenty <= nodeTwoCoordinates[1]; currenty++) {
-      let currentId = `${nodeTwoCoordinates[0]}-${currenty}`;
+      let currentId = `${prefix}${nodeTwoCoordinates[0]}-${currenty}`;
       let currentNode = nodes[currentId];
       additionalyChange += currentNode.weight;
     }
@@ -3636,12 +3673,12 @@ function weightedManhattanDistance(nodeOne, nodeTwo, nodes) {
     let otherAdditionalxChange = 0,
         otherAdditionalyChange = 0;
     for (let currenty = nodeOneCoordinates[1]; currenty <= nodeTwoCoordinates[1]; currenty++) {
-      let currentId = `${nodeOne.id.split("-")[0]}-${currenty}`;
+      let currentId = `${prefix}${nodeOneId[0]}-${currenty}`;
       let currentNode = nodes[currentId];
       additionalyChange += currentNode.weight;
     }
     for (let currentx = nodeOneCoordinates[0]; currentx >= nodeTwoCoordinates[0]; currentx--) {
-      let currentId = `${currentx}-${nodeTwoCoordinates[1]}`;
+      let currentId = `${prefix}${currentx}-${nodeTwoCoordinates[1]}`;
       let currentNode = nodes[currentId];
       additionalxChange += currentNode.weight;
     }
@@ -3657,12 +3694,12 @@ function weightedManhattanDistance(nodeOne, nodeTwo, nodes) {
       let additionalxChange = 0,
           additionalyChange = 0;
       for (let currentx = nodeOneCoordinates[0]; currentx >= nodeTwoCoordinates[0]; currentx--) {
-        let currentId = `${currentx}-${nodeOne.id.split("-")[1]}`;
+        let currentId = `${prefix}${currentx}-${nodeOneId[1]}`;
         let currentNode = nodes[currentId];
         additionalxChange += currentNode.weight;
       }
       for (let currenty = nodeOneCoordinates[1]; currenty >= nodeTwoCoordinates[1]; currenty--) {
-        let currentId = `${nodeTwoCoordinates[0]}-${currenty}`;
+        let currentId = `${prefix}${nodeTwoCoordinates[0]}-${currenty}`;
         let currentNode = nodes[currentId];
         additionalyChange += currentNode.weight;
       }
@@ -3670,12 +3707,12 @@ function weightedManhattanDistance(nodeOne, nodeTwo, nodes) {
       let otherAdditionalxChange = 0,
           otherAdditionalyChange = 0;
       for (let currenty = nodeOneCoordinates[1]; currenty >= nodeTwoCoordinates[1]; currenty--) {
-        let currentId = `${nodeOne.id.split("-")[0]}-${currenty}`;
+        let currentId = `${prefix}${nodeOneId[0]}-${currenty}`;
         let currentNode = nodes[currentId];
         additionalyChange += currentNode.weight;
       }
       for (let currentx = nodeOneCoordinates[0]; currentx >= nodeTwoCoordinates[0]; currentx--) {
-        let currentId = `${currentx}-${nodeTwoCoordinates[1]}`;
+        let currentId = `${prefix}${currentx}-${nodeTwoCoordinates[1]}`;
         let currentNode = nodes[currentId];
         additionalxChange += currentNode.weight;
       }
@@ -3726,12 +3763,17 @@ function unweightedSearchAlgorithm(nodes, start, target, nodesToAnimate, boardAr
 
 function getNeighbors(id, nodes, boardArray, name) {
   let coordinates = id.split("-");
+  let prefix = ""
+  if (id[0] === "b") {
+    coordinates = id.slice(7).split("-")
+    prefix = "board2_"
+  }
   let x = parseInt(coordinates[0]);
   let y = parseInt(coordinates[1]);
   let neighbors = [];
   let potentialNeighbor;
   if (boardArray[x - 1] && boardArray[x - 1][y]) {
-    potentialNeighbor = `${(x - 1).toString()}-${y.toString()}`
+    potentialNeighbor = `${prefix}${(x - 1).toString()}-${y.toString()}`
     if (nodes[potentialNeighbor].status !== "wall") {
       if (name === "bfs") {
         neighbors.push(potentialNeighbor);
@@ -3741,7 +3783,7 @@ function getNeighbors(id, nodes, boardArray, name) {
     }
   }
   if (boardArray[x][y + 1]) {
-    potentialNeighbor = `${x.toString()}-${(y + 1).toString()}`
+    potentialNeighbor = `${prefix}${x.toString()}-${(y + 1).toString()}`
     if (nodes[potentialNeighbor].status !== "wall") {
       if (name === "bfs") {
         neighbors.push(potentialNeighbor);
@@ -3751,7 +3793,7 @@ function getNeighbors(id, nodes, boardArray, name) {
     }
   }
   if (boardArray[x + 1] && boardArray[x + 1][y]) {
-    potentialNeighbor = `${(x + 1).toString()}-${y.toString()}`
+    potentialNeighbor = `${prefix}${(x + 1).toString()}-${y.toString()}`
     if (nodes[potentialNeighbor].status !== "wall") {
       if (name === "bfs") {
         neighbors.push(potentialNeighbor);
@@ -3761,7 +3803,7 @@ function getNeighbors(id, nodes, boardArray, name) {
     }
   }
   if (boardArray[x][y - 1]) {
-    potentialNeighbor = `${x.toString()}-${(y - 1).toString()}`
+    potentialNeighbor = `${prefix}${x.toString()}-${(y - 1).toString()}`
     if (nodes[potentialNeighbor].status !== "wall") {
       if (name === "bfs") {
         neighbors.push(potentialNeighbor);
@@ -3865,7 +3907,12 @@ function updateNode(currentNode, targetNode, actualTargetNode, name, nodes, actu
 }
 
 function getNeighbors(id, nodes, boardArray) {
+  let prefix = ""
   let coordinates = id.split("-");
+  if (id[0] === "b") {
+    prefix = "board2_"
+    coordinates = id.slice(7).split("-");
+  }
   let x = parseInt(coordinates[0]);
   let y = parseInt(coordinates[1]);
   let neighbors = [];
@@ -3891,8 +3938,18 @@ function getNeighbors(id, nodes, boardArray) {
 
 
 function getDistance(nodeOne, nodeTwo) {
-  let currentCoordinates = nodeOne.id.split("-");
-  let targetCoordinates = nodeTwo.id.split("-");
+  let prefix = ""
+  let nodeOneId = nodeOne.id
+  let nodeTwoId = nodeTwo.id
+  if (nodeOne.id[0] === "b") {
+    prefix = "board2_";
+
+    nodeOneId = nodeOne.id.slice(7)
+    nodeTwoId = nodeTwo.id.slice(7)
+    
+  }
+  let currentCoordinates = nodeOneId.split("-");
+  let targetCoordinates = nodeTwoId.split("-");
   let x1 = parseInt(currentCoordinates[0]);
   let y1 = parseInt(currentCoordinates[1]);
   let x2 = parseInt(targetCoordinates[0]);
@@ -3942,16 +3999,27 @@ function getDistance(nodeOne, nodeTwo) {
 }
 
 function manhattanDistance(nodeOne, nodeTwo) {
-  let nodeOneCoordinates = nodeOne.id.split("-").map(ele => parseInt(ele));
-  let nodeTwoCoordinates = nodeTwo.id.split("-").map(ele => parseInt(ele));
+  let prefix = ""
+  let nodeOneId = nodeOne.id
+  let nodeTwoId = nodeTwo.id
+  if (nodeOne.id[0] === "b") {
+    prefix = "board2_";
+
+    nodeOneId = nodeOne.id.slice(7)
+    nodeTwoId = nodeTwo.id.slice(7)
+    
+  }
+
+  let nodeOneCoordinates = nodeOneId.split("-").map(ele => parseInt(ele));
+  let nodeTwoCoordinates = nodeTwoId.split("-").map(ele => parseInt(ele));
   let xChange = Math.abs(nodeOneCoordinates[0] - nodeTwoCoordinates[0]);
   let yChange = Math.abs(nodeOneCoordinates[1] - nodeTwoCoordinates[1]);
   return (xChange + yChange);
 }
 
-function weightedManhattanDistance(nodeOne, nodeTwo, nodes) {
-  let nodeOneCoordinates = nodeOne.id.split("-").map(ele => parseInt(ele));
-  let nodeTwoCoordinates = nodeTwo.id.split("-").map(ele => parseInt(ele));
+function weightedManhattanDistance(nodeOneId, nodeTwoId, nodes) {
+  let nodeOneCoordinates = nodeOneId.split("-").map(ele => parseInt(ele));
+  let nodeTwoCoordinates = nodeTwoId.split("-").map(ele => parseInt(ele));
   let xChange = Math.abs(nodeOneCoordinates[0] - nodeTwoCoordinates[0]);
   let yChange = Math.abs(nodeOneCoordinates[1] - nodeTwoCoordinates[1]);
 
@@ -3959,12 +4027,12 @@ function weightedManhattanDistance(nodeOne, nodeTwo, nodes) {
     let additionalxChange = 0,
         additionalyChange = 0;
     for (let currentx = nodeOneCoordinates[0]; currentx <= nodeTwoCoordinates[0]; currentx++) {
-      let currentId = `${currentx}-${nodeOne.id.split("-")[1]}`;
+      let currentId = `${prefix}${currentx}-${nodeOneId.split("-")[1]}`;
       let currentNode = nodes[currentId];
       additionalxChange += currentNode.weight;
     }
     for (let currenty = nodeOneCoordinates[1]; currenty <= nodeTwoCoordinates[1]; currenty++) {
-      let currentId = `${nodeTwoCoordinates[0]}-${currenty}`;
+      let currentId = `${prefix}${nodeTwoCoordinates[0]}-${currenty}`;
       let currentNode = nodes[currentId];
       additionalyChange += currentNode.weight;
     }
@@ -3972,12 +4040,12 @@ function weightedManhattanDistance(nodeOne, nodeTwo, nodes) {
     let otherAdditionalxChange = 0,
         otherAdditionalyChange = 0;
     for (let currenty = nodeOneCoordinates[1]; currenty <= nodeTwoCoordinates[1]; currenty++) {
-      let currentId = `${nodeOne.id.split("-")[0]}-${currenty}`;
+      let currentId = `${prefix}${nodeOne.id.split("-")[0]}-${currenty}`;
       let currentNode = nodes[currentId];
       additionalyChange += currentNode.weight;
     }
     for (let currentx = nodeOneCoordinates[0]; currentx <= nodeTwoCoordinates[0]; currentx++) {
-      let currentId = `${currentx}-${nodeTwoCoordinates[1]}`;
+      let currentId = `${prefix}${currentx}-${nodeTwoCoordinates[1]}`;
       let currentNode = nodes[currentId];
       additionalxChange += currentNode.weight;
     }
@@ -3993,12 +4061,12 @@ function weightedManhattanDistance(nodeOne, nodeTwo, nodes) {
     let additionalxChange = 0,
         additionalyChange = 0;
     for (let currentx = nodeOneCoordinates[0]; currentx <= nodeTwoCoordinates[0]; currentx++) {
-      let currentId = `${currentx}-${nodeOne.id.split("-")[1]}`;
+      let currentId = `${prefix}${currentx}-${nodeOneId.split("-")[1]}`;
       let currentNode = nodes[currentId];
       additionalxChange += currentNode.weight;
     }
     for (let currenty = nodeOneCoordinates[1]; currenty >= nodeTwoCoordinates[1]; currenty--) {
-      let currentId = `${nodeTwoCoordinates[0]}-${currenty}`;
+      let currentId = `${prefix}${nodeTwoCoordinates[0]}-${currenty}`;
       let currentNode = nodes[currentId];
       additionalyChange += currentNode.weight;
     }
@@ -4006,12 +4074,12 @@ function weightedManhattanDistance(nodeOne, nodeTwo, nodes) {
     let otherAdditionalxChange = 0,
         otherAdditionalyChange = 0;
     for (let currenty = nodeOneCoordinates[1]; currenty >= nodeTwoCoordinates[1]; currenty--) {
-      let currentId = `${nodeOne.id.split("-")[0]}-${currenty}`;
+      let currentId = `${prefix}${nodeOneId.split("-")[0]}-${currenty}`;
       let currentNode = nodes[currentId];
       additionalyChange += currentNode.weight;
     }
     for (let currentx = nodeOneCoordinates[0]; currentx <= nodeTwoCoordinates[0]; currentx++) {
-      let currentId = `${currentx}-${nodeTwoCoordinates[1]}`;
+      let currentId = `${prefix}${currentx}-${nodeTwoCoordinates[1]}`;
       let currentNode = nodes[currentId];
       additionalxChange += currentNode.weight;
     }
@@ -4027,12 +4095,12 @@ function weightedManhattanDistance(nodeOne, nodeTwo, nodes) {
     let additionalxChange = 0,
         additionalyChange = 0;
     for (let currentx = nodeOneCoordinates[0]; currentx >= nodeTwoCoordinates[0]; currentx--) {
-      let currentId = `${currentx}-${nodeOne.id.split("-")[1]}`;
+      let currentId = `${prefix}${currentx}-${nodeOne.id.split("-")[1]}`;
       let currentNode = nodes[currentId];
       additionalxChange += currentNode.weight;
     }
     for (let currenty = nodeOneCoordinates[1]; currenty <= nodeTwoCoordinates[1]; currenty++) {
-      let currentId = `${nodeTwoCoordinates[0]}-${currenty}`;
+      let currentId = `${prefix}${nodeTwoCoordinates[0]}-${currenty}`;
       let currentNode = nodes[currentId];
       additionalyChange += currentNode.weight;
     }
@@ -4040,12 +4108,12 @@ function weightedManhattanDistance(nodeOne, nodeTwo, nodes) {
     let otherAdditionalxChange = 0,
         otherAdditionalyChange = 0;
     for (let currenty = nodeOneCoordinates[1]; currenty <= nodeTwoCoordinates[1]; currenty++) {
-      let currentId = `${nodeOne.id.split("-")[0]}-${currenty}`;
+      let currentId = `${prefix}${nodeOneId.split("-")[0]}-${currenty}`;
       let currentNode = nodes[currentId];
       additionalyChange += currentNode.weight;
     }
     for (let currentx = nodeOneCoordinates[0]; currentx >= nodeTwoCoordinates[0]; currentx--) {
-      let currentId = `${currentx}-${nodeTwoCoordinates[1]}`;
+      let currentId = `${prefix}${currentx}-${nodeTwoCoordinates[1]}`;
       let currentNode = nodes[currentId];
       additionalxChange += currentNode.weight;
     }
@@ -4061,12 +4129,12 @@ function weightedManhattanDistance(nodeOne, nodeTwo, nodes) {
       let additionalxChange = 0,
           additionalyChange = 0;
       for (let currentx = nodeOneCoordinates[0]; currentx >= nodeTwoCoordinates[0]; currentx--) {
-        let currentId = `${currentx}-${nodeOne.id.split("-")[1]}`;
+        let currentId = `${prefix}${currentx}-${nodeOneId.split("-")[1]}`;
         let currentNode = nodes[currentId];
         additionalxChange += currentNode.weight;
       }
       for (let currenty = nodeOneCoordinates[1]; currenty >= nodeTwoCoordinates[1]; currenty--) {
-        let currentId = `${nodeTwoCoordinates[0]}-${currenty}`;
+        let currentId = `${prefix}${nodeTwoCoordinates[0]}-${currenty}`;
         let currentNode = nodes[currentId];
         additionalyChange += currentNode.weight;
       }
@@ -4074,12 +4142,12 @@ function weightedManhattanDistance(nodeOne, nodeTwo, nodes) {
       let otherAdditionalxChange = 0,
           otherAdditionalyChange = 0;
       for (let currenty = nodeOneCoordinates[1]; currenty >= nodeTwoCoordinates[1]; currenty--) {
-        let currentId = `${nodeOne.id.split("-")[0]}-${currenty}`;
+        let currentId = `${prefix}${nodeOneId.split("-")[0]}-${currenty}`;
         let currentNode = nodes[currentId];
         additionalyChange += currentNode.weight;
       }
       for (let currentx = nodeOneCoordinates[0]; currentx >= nodeTwoCoordinates[0]; currentx--) {
-        let currentId = `${currentx}-${nodeTwoCoordinates[1]}`;
+        let currentId = `${prefix}${currentx}-${nodeTwoCoordinates[1]}`;
         let currentNode = nodes[currentId];
         additionalxChange += currentNode.weight;
       }
