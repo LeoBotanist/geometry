@@ -1144,7 +1144,8 @@ Board1.prototype.toggleButtons = function() {
 
 
     document.getElementById("startButtonBidirectional1").onclick = () => {
-      document.getElementById("startButtonStart").innerHTML = '<button id="actualStartButton" class="btn btn-default navbar-btn" type="button">Visualize Bidirectional Swarm!</button>'
+      console.log("Bidir swarm")
+      document.getElementById("startButtonStart").innerHTML = '<button id="actualStartButton1" class="btn btn-default navbar-btn" type="button">Visualize Bidirectional Swarm!</button>'
       this.currentAlgorithm = "bidirectional";
       this.currentHeuristic = "manhattanDistance";
       if (this.numberOfObjects) {
@@ -1161,47 +1162,47 @@ Board1.prototype.toggleButtons = function() {
     }
 
     document.getElementById("startButtonDijkstra1").onclick = () => {
-      document.getElementById("startButtonStart").innerHTML = '<button id="actualStartButton" class="btn btn-default navbar-btn" type="button">Visualize Dijkstra\'s!</button>'
+      document.getElementById("startButtonStart").innerHTML = '<button id="actualStartButton1" class="btn btn-default navbar-btn" type="button">Visualize Dijkstra\'s!</button>'
       this.currentAlgorithm = "dijkstra";
       this.changeStartNodeImages();
     }
 
     document.getElementById("startButtonAStar1").onclick = () => {
-      document.getElementById("startButtonStart").innerHTML = '<button id="actualStartButton" class="btn btn-default navbar-btn" type="button">Visualize Swarm!</button>'
+      document.getElementById("startButtonStart").innerHTML = '<button id="actualStartButton1" class="btn btn-default navbar-btn" type="button">Visualize Swarm!</button>'
       this.currentAlgorithm = "CLA";
       this.currentHeuristic = "manhattanDistance"
       this.changeStartNodeImages();
     }
 
     document.getElementById("startButtonAStar21").onclick = () => {
-      document.getElementById("startButtonStart").innerHTML = '<button id="actualStartButton" class="btn btn-default navbar-btn" type="button">Visualize A*!</button>'
+      document.getElementById("startButtonStart").innerHTML = '<button id="actualStartButton1" class="btn btn-default navbar-btn" type="button">Visualize A*!</button>'
       this.currentAlgorithm = "astar";
       this.currentHeuristic = "poweredManhattanDistance"
       this.changeStartNodeImages();
     }
 
     document.getElementById("startButtonAStar31").onclick = () => {
-      document.getElementById("startButtonStart").innerHTML = '<button id="actualStartButton" class="btn btn-default navbar-btn" type="button">Visualize Convergent Swarm!</button>'
+      document.getElementById("startButtonStart").innerHTML = '<button id="actualStartButton1" class="btn btn-default navbar-btn" type="button">Visualize Convergent Swarm!</button>'
       this.currentAlgorithm = "CLA";
       this.currentHeuristic = "extraPoweredManhattanDistance"
       this.changeStartNodeImages();
     }
 
     document.getElementById("startButtonGreedy1").onclick = () => {
-      document.getElementById("startButtonStart").innerHTML = '<button id="actualStartButton" class="btn btn-default navbar-btn" type="button">Visualize Greedy!</button>'
+      document.getElementById("startButtonStart").innerHTML = '<button id="actualStartButton1" class="btn btn-default navbar-btn" type="button">Visualize Greedy!</button>'
       this.currentAlgorithm = "greedy";
       this.changeStartNodeImages();
     }
 
     document.getElementById("startButtonBFS1").onclick = () => {
-      document.getElementById("startButtonStart").innerHTML = '<button id="actualStartButton" class="btn btn-default navbar-btn" type="button">Visualize BFS!</button>'
+      document.getElementById("startButtonStart").innerHTML = '<button id="actualStartButton1" class="btn btn-default navbar-btn" type="button">Visualize BFS!</button>'
       this.currentAlgorithm = "bfs";
       this.clearWeights();
       this.changeStartNodeImages();
     }
 
     document.getElementById("startButtonDFS1").onclick = () => {
-      document.getElementById("startButtonStart").innerHTML = '<button id="actualStartButton" class="btn btn-default navbar-btn" type="button">Visualize DFS!</button>'
+      document.getElementById("startButtonStart").innerHTML = '<button id="actualStartButton1" class="btn btn-default navbar-btn" type="button">Visualize DFS!</button>'
       this.currentAlgorithm = "dfs";
       this.clearWeights();
       this.changeStartNodeImages();
@@ -1361,7 +1362,7 @@ Board1.prototype.toggleButtons = function() {
     document.getElementById("adjustSlow").className = "navbar-inverse navbar-nav";
     document.getElementById("1").className = "navbar-inverse navbar-nav";
     document.getElementById("startButtonGreedy1").className = "navbar-inverse navbar-nav";
-    document.getElementById("actualStartButton").style.backgroundColor = "";
+    document.getElementById("actualStartButton1").style.backgroundColor = "";
 
   } else {
     this.buttonsOn = false;
@@ -1410,7 +1411,7 @@ Board1.prototype.toggleButtons = function() {
     document.getElementById("startButtonAStar31").className = "navbar-inverse navbar-nav disabledA";
     document.getElementById("startButtonBidirectional1").className = "navbar-inverse navbar-nav disabledA";
 
-    document.getElementById("actualStartButton").style.backgroundColor = "rgb(185, 15, 15)";
+    document.getElementById("actualStartButton1").style.backgroundColor = "rgb(185, 15, 15)";
   }
 
 
@@ -2230,7 +2231,7 @@ Board2.prototype.toggleButtons = function() {
 
 
     document.getElementById("startButtonBidirectional2").onclick = () => {
-      document.getElementById("startButtonStart").innerHTML = '<button id="actualStartButton" class="btn btn-default navbar-btn" type="button">Visualize Bidirectional Swarm!</button>'
+      document.getElementById("startButtonStart").innerHTML = '<button id="actualStartButton2" class="btn btn-default navbar-btn" type="button">Visualize Bidirectional Swarm!</button>'
       this.currentAlgorithm = "bidirectional";
       this.currentHeuristic = "manhattanDistance";
       if (this.numberOfObjects) {
@@ -2247,47 +2248,47 @@ Board2.prototype.toggleButtons = function() {
     }
 
     document.getElementById("startButtonDijkstra2").onclick = () => {
-      document.getElementById("startButtonStart").innerHTML = '<button id="actualStartButton" class="btn btn-default navbar-btn" type="button">Visualize Dijkstra\'s!</button>'
+      document.getElementById("startButtonStart").innerHTML = '<button id="actualStartButton2" class="btn btn-default navbar-btn" type="button">Visualize Dijkstra\'s!</button>'
       this.currentAlgorithm = "dijkstra";
       this.changeStartNodeImages();
     }
 
     document.getElementById("startButtonAStar2").onclick = () => {
-      document.getElementById("startButtonStart").innerHTML = '<button id="actualStartButton" class="btn btn-default navbar-btn" type="button">Visualize Swarm!</button>'
+      document.getElementById("startButtonStart").innerHTML = '<button id="actualStartButton2" class="btn btn-default navbar-btn" type="button">Visualize Swarm!</button>'
       this.currentAlgorithm = "CLA";
       this.currentHeuristic = "manhattanDistance"
       this.changeStartNodeImages();
     }
 
     document.getElementById("startButtonAStar22").onclick = () => {
-      document.getElementById("startButtonStart").innerHTML = '<button id="actualStartButton" class="btn btn-default navbar-btn" type="button">Visualize A*!</button>'
+      document.getElementById("startButtonStart").innerHTML = '<button id="actualStartButton2" class="btn btn-default navbar-btn" type="button">Visualize A*!</button>'
       this.currentAlgorithm = "astar";
       this.currentHeuristic = "poweredManhattanDistance"
       this.changeStartNodeImages();
     }
 
     document.getElementById("startButtonAStar32").onclick = () => {
-      document.getElementById("startButtonStart").innerHTML = '<button id="actualStartButton" class="btn btn-default navbar-btn" type="button">Visualize Convergent Swarm!</button>'
+      document.getElementById("startButtonStart").innerHTML = '<button id="actualStartButton2" class="btn btn-default navbar-btn" type="button">Visualize Convergent Swarm!</button>'
       this.currentAlgorithm = "CLA";
       this.currentHeuristic = "extraPoweredManhattanDistance"
       this.changeStartNodeImages();
     }
 
     document.getElementById("startButtonGreedy2").onclick = () => {
-      document.getElementById("startButtonStart").innerHTML = '<button id="actualStartButton" class="btn btn-default navbar-btn" type="button">Visualize Greedy!</button>'
+      document.getElementById("startButtonStart").innerHTML = '<button id="actualStartButton2" class="btn btn-default navbar-btn" type="button">Visualize Greedy!</button>'
       this.currentAlgorithm = "greedy";
       this.changeStartNodeImages();
     }
 
     document.getElementById("startButtonBFS2").onclick = () => {
-      document.getElementById("startButtonStart").innerHTML = '<button id="actualStartButton" class="btn btn-default navbar-btn" type="button">Visualize BFS!</button>'
+      document.getElementById("startButtonStart").innerHTML = '<button id="actualStartButton2" class="btn btn-default navbar-btn" type="button">Visualize BFS!</button>'
       this.currentAlgorithm = "bfs";
       this.clearWeights();
       this.changeStartNodeImages();
     }
 
     document.getElementById("startButtonDFS2").onclick = () => {
-      document.getElementById("startButtonStart").innerHTML = '<button id="actualStartButton" class="btn btn-default navbar-btn" type="button">Visualize DFS!</button>'
+      document.getElementById("startButtonStart").innerHTML = '<button id="actualStartButton2" class="btn btn-default navbar-btn" type="button">Visualize DFS!</button>'
       this.currentAlgorithm = "dfs";
       this.clearWeights();
       this.changeStartNodeImages();
@@ -2447,7 +2448,7 @@ Board2.prototype.toggleButtons = function() {
     document.getElementById("adjustSlow").className = "navbar-inverse navbar-nav";
     document.getElementById("startButtonBidirectional2").className = "navbar-inverse navbar-nav";
     document.getElementById("startButtonGreedy2").className = "navbar-inverse navbar-nav";
-    document.getElementById("actualStartButton").style.backgroundColor = "";
+    document.getElementById("actualStartButton2").style.backgroundColor = "";
 
   } else {
     this.buttonsOn = false;
@@ -2496,7 +2497,7 @@ Board2.prototype.toggleButtons = function() {
     document.getElementById("startButtonAStar32").className = "navbar-inverse navbar-nav disabledA";
     document.getElementById("startButtonBidirectional2").className = "navbar-inverse navbar-nav disabledA";
 
-    document.getElementById("actualStartButton").style.backgroundColor = "rgb(185, 15, 15)";
+    document.getElementById("actualStartButton2").style.backgroundColor = "rgb(185, 15, 15)";
   }
 
 

@@ -299,7 +299,7 @@
   padding: 0 28px 0 0;
 }
 
-#actualStartButton {
+#actualStartButton1, #actualStartButton2 {
   /*color: red;*/
   background-color: none;
 }
