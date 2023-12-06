@@ -363,6 +363,7 @@ function Board1(height, width) {
 Board1.prototype.initialise = function() {
   this.createGrid();
   this.addEventListeners();
+  this.toggleButtons();
   // this.toggleTutorialButtons();
 };
 
@@ -1059,12 +1060,14 @@ Board1.prototype.toggleTutorialButtons = function() {
 };
 
 Board1.prototype.toggleButtons = function() {
+  console.log("board1 toggle buttons!")
   document.getElementById("refreshButton").onclick = () => {
     window.location.reload(true);
   }
 
   if (!this.buttonsOn) {
     this.buttonsOn = true;
+    console.log("this button is on!")
 
     document.getElementById("startButtonStart1").onclick = () => {
       if (!this.currentAlgorithm) {
@@ -1361,12 +1364,13 @@ Board1.prototype.toggleButtons = function() {
     document.getElementById("adjustFast").className = "navbar-inverse navbar-nav";
     document.getElementById("adjustAverage").className = "navbar-inverse navbar-nav";
     document.getElementById("adjustSlow").className = "navbar-inverse navbar-nav";
-    document.getElementById("1").className = "navbar-inverse navbar-nav";
+    // document.getElementById("1").className = "navbar-inverse navbar-nav";
     document.getElementById("startButtonGreedy1").className = "navbar-inverse navbar-nav";
     document.getElementById("actualStartButton1").style.backgroundColor = "";
 
   } else {
     this.buttonsOn = false;
+    console.log("this buttons not on!")
     document.getElementById("startButtonDFS1").onclick = null;
     document.getElementById("startButtonBFS1").onclick = null;
     document.getElementById("startButtonDijkstra1").onclick = null;
@@ -1451,6 +1455,7 @@ Board2.prototype.initialise = function() {
   console.log("board2 init");
   this.createGrid();
   this.addEventListeners();
+  this.toggleButtons();
   // this.toggleTutorialButtons();
 };
 
@@ -1460,7 +1465,7 @@ Board2.prototype.createGrid = function() {
     let currentArrayRow = [];
     let currentHTMLRow = `<tr id="board2_row ${r}">`;
     for (let c = 0; c < this.width; c++) {
-      let newNodeId = `$board2_${r}-${c}`, newNodeClass, newNode;
+      let newNodeId = `board2_${r}-${c}`, newNodeClass, newNode;
       if (r === Math.floor(this.height / 2) && c === Math.floor(this.width / 4)) {
         newNodeClass = "start";
         this.start = `${newNodeId}`;
@@ -1472,7 +1477,7 @@ Board2.prototype.createGrid = function() {
       }
       newNode = new Node(newNodeId, newNodeClass);
       currentArrayRow.push(newNode);
-      currentHTMLRow += `<td id="board2_${newNodeId}" class="${newNodeClass}"></td>`;
+      currentHTMLRow += `<td id="${newNodeId}" class="${newNodeClass}"></td>`;
       this.nodes[`${newNodeId}`] = newNode;
     }
     this.boardArray.push(currentArrayRow);
@@ -1486,7 +1491,7 @@ Board2.prototype.addEventListeners = function() {
   let board = this;
   for (let r = 0; r < board.height; r++) {
     for (let c = 0; c < board.width; c++) {
-      let currentId = `${r}-${c}`;
+      let currentId = `board2_${r}-${c}`;
       let currentNode = board.getNode(currentId);
       let currentElement = document.getElementById(currentId);
       currentElement.onmousedown = (e) => {
@@ -1551,7 +1556,7 @@ Board2.prototype.addEventListeners = function() {
 };
 
 Board2.prototype.getNode = function(id) {
-  let coordinates = id.split("-");
+  let coordinates = id.slice(7).split("-");
   let r = parseInt(coordinates[0]);
   let c = parseInt(coordinates[1]);
   return this.boardArray[r][c];
@@ -2085,10 +2090,10 @@ Board2.prototype.changeStartNodeImages = function() {
 
     document.getElementById("algorithmDescriptor").innerHTML = `${name} is <i><b>weighted</b></i> and <i><b>does not guarantee</b></i> the shortest path!`;
     document.getElementById("bombLegend").className = "strikethrough";
-    document.getElementById("startButtonAddObject").className = "navbar-inverse navbar-nav disabledA";
+    document.getElementById("startButtonAddObject2").className = "navbar-inverse navbar-nav disabledA";
   } else {
     document.getElementById("bombLegend").className = "";
-    document.getElementById("startButtonAddObject").className = "navbar-inverse navbar-nav";
+    document.getElementById("startButtonAddObject2").className = "navbar-inverse navbar-nav";
   }
   if (guaranteed.includes(this.currentAlgorithm)) {
     document.getElementById("algorithmDescriptor").innerHTML = `${name} is <i><b>weighted</b></i> and <i><b>guarantees</b></i> the shortest path!`;
@@ -2237,7 +2242,7 @@ Board2.prototype.toggleButtons = function() {
       this.currentHeuristic = "manhattanDistance";
       if (this.numberOfObjects) {
         let objectNodeId = this.object;
-        document.getElementById("startButtonAddObject").innerHTML = '<a href="#">Add a Bomb</a></li>';
+        document.getElementById("startButtonAddObject2").innerHTML = '<a href="#">Add a Bomb</a></li>';
         document.getElementById(objectNodeId).className = "unvisited";
         this.object = null;
         this.numberOfObjects = 0;
@@ -2316,7 +2321,7 @@ Board2.prototype.toggleButtons = function() {
     }
 
     document.getElementById("startButtonClearBoard").onclick = () => {
-      document.getElementById("startButtonAddObject").innerHTML = '<a href="#">Add Bomb</a></li>';
+      document.getElementById("startButtonAddObject2").innerHTML = '<a href="#">Add Bomb</a></li>';
 
 
 
@@ -2395,8 +2400,8 @@ Board2.prototype.toggleButtons = function() {
       mazeGenerationAnimations(this);
     }
 
-    document.getElementById("startButtonAddObject").onclick = () => {
-      let innerHTML = document.getElementById("startButtonAddObject").innerHTML;
+    document.getElementById("startButtonAddObject2").onclick = () => {
+      let innerHTML = document.getElementById("startButtonAddObject2").innerHTML;
       if (this.currentAlgorithm !== "bidirectional") {
         if (innerHTML.includes("Add")) {
           let r = Math.floor(this.height / 2);
@@ -2405,7 +2410,7 @@ Board2.prototype.toggleButtons = function() {
           if (this.target === objectNodeId || this.start === objectNodeId || this.numberOfObjects === 1) {
             console.log("Failure to place object.");
           } else {
-            document.getElementById("startButtonAddObject").innerHTML = '<a href="#">Remove Bomb</a></li>';
+            document.getElementById("startButtonAddObject2").innerHTML = '<a href="#">Remove Bomb</a></li>';
             this.clearPath("clickedButton");
             this.object = objectNodeId;
             this.numberOfObjects = 1;
@@ -2414,7 +2419,7 @@ Board2.prototype.toggleButtons = function() {
           }
         } else {
           let objectNodeId = this.object;
-          document.getElementById("startButtonAddObject").innerHTML = '<a href="#">Add Bomb</a></li>';
+          document.getElementById("startButtonAddObject2").innerHTML = '<a href="#">Add Bomb</a></li>';
           document.getElementById(objectNodeId).className = "unvisited";
           this.object = null;
           this.numberOfObjects = 0;
@@ -2430,7 +2435,7 @@ Board2.prototype.toggleButtons = function() {
     document.getElementById("startButtonClearWalls").className = "navbar-inverse navbar-nav";
     document.getElementById("startButtonClearBoard").className = "navbar-inverse navbar-nav";
     if (this.currentAlgorithm !== "bidirectional") {
-      document.getElementById("startButtonAddObject").className = "navbar-inverse navbar-nav";
+      document.getElementById("startButtonAddObject2").className = "navbar-inverse navbar-nav";
     }
     document.getElementById("startButtonCreateMazeOne").className = "navbar-inverse navbar-nav";
     document.getElementById("startButtonCreateMazeTwo").className = "navbar-inverse navbar-nav";
@@ -2482,7 +2487,7 @@ Board2.prototype.toggleButtons = function() {
     document.getElementById("startButtonClearPath").className = "navbar-inverse navbar-nav disabledA";
     document.getElementById("startButtonClearWalls").className = "navbar-inverse navbar-nav disabledA";
     document.getElementById("startButtonClearBoard").className = "navbar-inverse navbar-nav disabledA";
-    document.getElementById("startButtonAddObject").className = "navbar-inverse navbar-nav disabledA";
+    document.getElementById("startButtonAddObject2").className = "navbar-inverse navbar-nav disabledA";
     document.getElementById("startButtonCreateMazeOne").className = "navbar-inverse navbar-nav disabledA";
     document.getElementById("startButtonCreateMazeTwo").className = "navbar-inverse navbar-nav disabledA";
     document.getElementById("startButtonCreateMazeThree").className = "navbar-inverse navbar-nav disabledA";
@@ -3069,25 +3074,30 @@ function updateNode(currentNode, targetNode, actualTargetNode, name, nodes, actu
 }
 
 function getNeighbors(id, nodes, boardArray) {
+  let prefix = ""
+  if (id[0] === "b") {
+    prefix = "board2_";
+    id = id.slice(7);
+  }
   let coordinates = id.split("-");
   let x = parseInt(coordinates[0]);
   let y = parseInt(coordinates[1]);
   let neighbors = [];
   let potentialNeighbor;
   if (boardArray[x - 1] && boardArray[x - 1][y]) {
-    potentialNeighbor = `${(x - 1).toString()}-${y.toString()}`
+    potentialNeighbor = `${prefix}${(x - 1).toString()}-${y.toString()}`
     if (nodes[potentialNeighbor].status !== "wall") neighbors.push(potentialNeighbor);
   }
   if (boardArray[x + 1] && boardArray[x + 1][y]) {
-    potentialNeighbor = `${(x + 1).toString()}-${y.toString()}`
+    potentialNeighbor = `${prefix}${(x + 1).toString()}-${y.toString()}`
     if (nodes[potentialNeighbor].status !== "wall") neighbors.push(potentialNeighbor);
   }
   if (boardArray[x][y - 1]) {
-    potentialNeighbor = `${x.toString()}-${(y - 1).toString()}`
+    potentialNeighbor = `${prefix}${x.toString()}-${(y - 1).toString()}`
     if (nodes[potentialNeighbor].status !== "wall") neighbors.push(potentialNeighbor);
   }
   if (boardArray[x][y + 1]) {
-    potentialNeighbor = `${x.toString()}-${(y + 1).toString()}`
+    potentialNeighbor = `${prefix}${x.toString()}-${(y + 1).toString()}`
     if (nodes[potentialNeighbor].status !== "wall") neighbors.push(potentialNeighbor);
   }
   // if (boardArray[x - 1] && boardArray[x - 1][y - 1]) {
@@ -3861,19 +3871,19 @@ function getNeighbors(id, nodes, boardArray) {
   let neighbors = [];
   let potentialNeighbor;
   if (boardArray[x - 1] && boardArray[x - 1][y]) {
-    potentialNeighbor = `${(x - 1).toString()}-${y.toString()}`
+    potentialNeighbor = `${prefix}${(x - 1).toString()}-${y.toString()}`
     if (nodes[potentialNeighbor].status !== "wall") neighbors.push(potentialNeighbor);
   }
   if (boardArray[x + 1] && boardArray[x + 1][y]) {
-    potentialNeighbor = `${(x + 1).toString()}-${y.toString()}`
+    potentialNeighbor = `${prefix}${(x + 1).toString()}-${y.toString()}`
     if (nodes[potentialNeighbor].status !== "wall") neighbors.push(potentialNeighbor);
   }
   if (boardArray[x][y - 1]) {
-    potentialNeighbor = `${x.toString()}-${(y - 1).toString()}`
+    potentialNeighbor = `${prefix}${x.toString()}-${(y - 1).toString()}`
     if (nodes[potentialNeighbor].status !== "wall") neighbors.push(potentialNeighbor);
   }
   if (boardArray[x][y + 1]) {
-    potentialNeighbor = `${x.toString()}-${(y + 1).toString()}`
+    potentialNeighbor = `${prefix}${x.toString()}-${(y + 1).toString()}`
     if (nodes[potentialNeighbor].status !== "wall") neighbors.push(potentialNeighbor);
   }
   return neighbors;
