@@ -758,6 +758,12 @@ Board1.prototype.clearPath = function(clickedButton) {
       document.getElementById(object.id).className = "object";
     }
   }
+  document.getElementById("startBothViz").onclick = () => {
+    document.getElementById("startButtonStart1").onclick();
+    document.getElementById("startButtonStart2").onclick();
+    document.getElementById("actualStartButton1").onclick();
+    document.getElementById("actualStartButton2").onclick();
+  }
 
   document.getElementById("startButtonStart1").onclick = () => {
     if (!this.currentAlgorithm) {
