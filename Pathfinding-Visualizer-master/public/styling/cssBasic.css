@@ -13,6 +13,7 @@
 .start{
   /*border: 1px solid rgb(175, 216, 248);*/
   background-image:url(triangletwo-right.svg);
+  border: 1px solid rgb(175, 216, 248);
   /*background-color: rgb(255, 254, 106);*/
   background-position: center;
   background-repeat: no-repeat;

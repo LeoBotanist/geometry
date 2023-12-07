@@ -3,6 +3,7 @@ const weightedSearchAlgorithm = require("../pathfindingAlgorithms/weightedSearch
 const unweightedSearchAlgorithm = require("../pathfindingAlgorithms/unweightedSearchAlgorithm");
 
 function launchAnimations(board, success, type, object, algorithm, heuristic) {
+  console.log(object)
   let nodes = object ? board.objectNodesToAnimate.slice(0) : board.nodesToAnimate.slice(0);
   let speed = board.speed === "fast" ?
     0 : board.speed === "average" ?
@@ -21,7 +22,7 @@ function launchAnimations(board, success, type, object, algorithm, heuristic) {
 
             } else {
               if (type === "weighted") {
-                newSuccess = weightedSearchAlgorithm(board.nodes, board.object, board.target, board.nodesToAnimate, board.boardArray, algorithm, heuristic);
+                newSuccess = weightedSearchAlgorithm(board.nodes, board.object, board.target, board.nodesToAnimate, board.boardArray, this.startNodesRelative, board.startNodesRelative, algorithm, heuristic);
               } else {
                 newSuccess = unweightedSearchAlgorithm(board.nodes, board.object, board.target, board.nodesToAnimate, board.boardArray, algorithm);
               }
@@ -64,10 +65,14 @@ function launchAnimations(board, success, type, object, algorithm, heuristic) {
         }
       } else if (index === 0) {
         if (object) {
-          document.getElementById(board.start).className = "visitedStartNodePurple";
+          // document.getElementById(board.start).className = "visitedStartNodePurple";
+          board.startNodes.forEach((startNode) => {
+            let element = document.getElementById(startNode);element.className = "visitedStartNodePurple";});
         } else {
           if (document.getElementById(board.start).className !== "visitedStartNodePurple") {
-            document.getElementById(board.start).className = "visitedStartNodeBlue";
+            // document.getElementById(board.start).className = "visitedStartNodeBlue";
+            board.startNodes.forEach((startNode) => {
+              let element = document.getElementById(startNode);element.className = "visitedStartNodeBlue";});
           }
         }
         if (board.currentAlgorithm === "bidirectional") {
@@ -120,7 +125,7 @@ function launchAnimations(board, success, type, object, algorithm, heuristic) {
           board.clearNodeStatuses();
           let newSuccess;
           if (type === "weighted") {
-            newSuccess = weightedSearchAlgorithm(board.nodes, board.object, board.target, board.nodesToAnimate, board.boardArray, algorithm);
+            newSuccess = weightedSearchAlgorithm(board.nodes, board.object, board.target, board.nodesToAnimate, board.boardArray, this.startNodesRelative, algorithm);
           } else {
             newSuccess = unweightedSearchAlgorithm(board.nodes, board.object, board.target, board.nodesToAnimate, board.boardArray, algorithm);
           }
@@ -195,7 +200,7 @@ function launchInstantAnimations(board, success, type, object, algorithm, heuris
       board.clearNodeStatuses();
       let newSuccess;
       if (type === "weighted") {
-        newSuccess = weightedSearchAlgorithm(board.nodes, board.object, board.target, board.nodesToAnimate, board.boardArray, algorithm, heuristic);
+        newSuccess = weightedSearchAlgorithm(board.nodes, board.object, board.target, board.nodesToAnimate, board.boardArray, this.startNodesRelative, algorithm, heuristic);
       } else {
         newSuccess = unweightedSearchAlgorithm(board.nodes, board.object, board.target, board.nodesToAnimate, board.boardArray, algorithm);
       }
@@ -238,7 +243,7 @@ function launchInstantAnimations(board, success, type, object, algorithm, heuris
     board.clearNodeStatuses();
     let newSuccess;
     if (type === "weighted") {
-      newSuccess = weightedSearchAlgorithm(board.nodes, board.object, board.target, board.nodesToAnimate, board.boardArray, algorithm);
+      newSuccess = weightedSearchAlgorithm(board.nodes, board.object, board.target, board.nodesToAnimate, board.boardArray, this.startNodesRelative, algorithm);
     } else {
       newSuccess = unweightedSearchAlgorithm(board.nodes, board.object, board.target, board.nodesToAnimate, board.boardArray, algorithm);
     }
@@ -336,6 +341,8 @@ function Board(height, width) {
   this.height = height;
   this.width = width;
   this.start = null;
+  this.startNodes = [];
+  this.startNodesRelative = ["0^0"];
   this.target = null;
   this.object = null;
   this.boardArray = [];
@@ -347,6 +354,7 @@ function Board(height, width) {
   this.wallsToAnimate = [];
   this.mouseDown = false;
   this.pressedNodeStatus = "normal";
+  this.previousNode;
   this.previouslyPressedNodeStatus = null;
   this.previouslySwitchedNode = null;
   this.previouslySwitchedNodeWeight = 0;
@@ -379,9 +387,11 @@ Board.prototype.createGrid = function() {
       } else if (r === Math.floor(this.height / 2) && c === Math.floor(3 * this.width / 4)) {
         newNodeClass = "target";
         this.target = `${newNodeId}`;
-      } else if (r === Math.floor(this.height / 2) + 1 && c === Math.floor(this.width / 4)) {
-        newNodeClass = "start";
-      } else {
+      } 
+      // else if (r === Math.floor(this.height / 2) + 1 && c === Math.floor(this.width / 4)) {
+      //   newNodeClass = "start";
+      // } 
+      else {
         newNodeClass = "unvisited";
       }
       newNode = new Node(newNodeId, newNodeClass);
@@ -409,6 +419,18 @@ Board.prototype.addEventListeners = function() {
           board.mouseDown = true;
           if (currentNode.status === "start" || currentNode.status === "target" || currentNode.status === "object") {
             board.pressedNodeStatus = currentNode.status;
+            board.previousNode = currentNode;
+            document.getElementById(currentNode.id).className = "unvisited";
+
+            let index = this.startNodes.indexOf(board.previousNode.id);
+            this.startNodes.splice(index, 1);
+
+            let initial_r = parseInt(this.start.split("-")[0]), initial_c = parseInt(this.start.split("-")[1]),
+                r = parseInt(currentNode.id.split("-")[0]), c = parseInt(currentNode.id.split("-")[1])
+            let relativeIndex = this.startNodesRelative.indexOf(`${r - initial_r}^${c - initial_c}`)
+            this.startNodesRelative.splice(relativeIndex, 1)
+            
+            
           } else {
             board.pressedNodeStatus = "normal";
             board.changeNormalNode(currentNode);
@@ -421,7 +443,21 @@ Board.prototype.addEventListeners = function() {
           if (board.pressedNodeStatus === "target") {
             board.target = currentId;
           } else if (board.pressedNodeStatus === "start") {
-            board.start = currentId;
+            // board.start = currentId;
+            
+            board.previousNode.status = "unvisited";
+
+            let prevN = document.getElementById(board.previousNode.id);
+            prevN.className = "unvisited";
+
+            board.startNodes.push(currentNode.id);
+            let initial_r = parseInt(this.start.split("-")[0]), initial_c = parseInt(this.start.split("-")[1]),
+                r = parseInt(currentNode.id.split("-")[0]), c = parseInt(currentNode.id.split("-")[1])
+            this.startNodesRelative.push(`${r - initial_r}^${c - initial_c}`)
+            console.log(board.startNodes);
+            console.log(board.startNodesRelative);
+            console.log(`initial start: ${board.start}`)
+            
           } else if (board.pressedNodeStatus === "object") {
             board.object = currentId;
           }
@@ -438,7 +474,7 @@ Board.prototype.addEventListeners = function() {
                 board.redoAlgorithm();
               }
             } else if (board.pressedNodeStatus === "start") {
-              board.start = currentId;
+              // board.start = currentId;
               if (board.algoDone) {
                 board.redoAlgorithm();
               }
@@ -448,9 +484,10 @@ Board.prototype.addEventListeners = function() {
                 board.redoAlgorithm();
               }
             }
-          } else if (board.mouseDown) {
-            board.changeNormalNode(currentNode);
-          }
+          } 
+          // else if (board.mouseDown) {
+          //   board.changeNormalNode(currentNode);
+          // }
         }
       }
       currentElement.onmouseleave = () => {
@@ -714,8 +751,11 @@ Board.prototype.drawShortestPathTimeout = function(targetNodeId, startNodeId, ty
         previousHTMLNode.className = previousNode.weight === 15 ? "shortest-path weight" : "shortest-path";
       }
     } else {
-      let element = document.getElementById(board.start);
-      element.className = "startTransparent";
+      // let element = document.getElementById(board.start);
+
+      board.startNodes.forEach((startNode) => {
+        let element = document.getElementById(startNode);element.className = "startTransparent";});
+      // element.className = "startTransparent";
     }
   }
 
@@ -771,7 +811,7 @@ Board.prototype.clearPath = function(clickedButton) {
       let success;
       if (this.currentAlgorithm === "bidirectional") {
         if (!this.numberOfObjects) {
-          success = bidirectional(this.nodes, this.start, this.target, this.nodesToAnimate, this.boardArray, this.currentAlgorithm, this.currentHeuristic, this);
+          success = bidirectional(this.nodes, this.start, this.target, this.nodesToAnimate, this.boardArray, this.startNodesRelative, this.currentAlgorithm, this.currentHeuristic, this);
           launchAnimations(this, success, "weighted");
         } else {
           this.isObject = true;
@@ -779,21 +819,21 @@ Board.prototype.clearPath = function(clickedButton) {
         this.algoDone = true;
       } else if (this.currentAlgorithm === "astar") {
         if (!this.numberOfObjects) {
-          success = weightedSearchAlgorithm(this.nodes, this.start, this.target, this.nodesToAnimate, this.boardArray, this.currentAlgorithm, this.currentHeuristic);
+          success = weightedSearchAlgorithm(this.nodes, this.start, this.target, this.nodesToAnimate, this.boardArray, this.startNodesRelative, this.currentAlgorithm, this.currentHeuristic);
           launchAnimations(this, success, "weighted");
         } else {
           this.isObject = true;
-          success = weightedSearchAlgorithm(this.nodes, this.start, this.object, this.objectNodesToAnimate, this.boardArray, this.currentAlgorithm, this.currentHeuristic);
+          success = weightedSearchAlgorithm(this.nodes, this.start, this.object, this.objectNodesToAnimate, this.boardArray, this.startNodesRelative, this.currentAlgorithm, this.currentHeuristic);
           launchAnimations(this, success, "weighted", "object", this.currentAlgorithm, this.currentHeuristic);
         }
         this.algoDone = true;
       } else if (weightedAlgorithms.includes(this.currentAlgorithm)) {
         if (!this.numberOfObjects) {
-          success = weightedSearchAlgorithm(this.nodes, this.start, this.target, this.nodesToAnimate, this.boardArray, this.currentAlgorithm, this.currentHeuristic);
+          success = weightedSearchAlgorithm(this.nodes, this.start, this.target, this.nodesToAnimate, this.boardArray, this.startNodesRelative, this.currentAlgorithm, this.currentHeuristic);
           launchAnimations(this, success, "weighted");
         } else {
           this.isObject = true;
-          success = weightedSearchAlgorithm(this.nodes, this.start, this.object, this.objectNodesToAnimate, this.boardArray, this.currentAlgorithm, this.currentHeuristic);
+          success = weightedSearchAlgorithm(this.nodes, this.start, this.object, this.objectNodesToAnimate, this.boardArray, this.startNodesRelative, this.currentAlgorithm, this.currentHeuristic);
           launchAnimations(this, success, "weighted", "object", this.currentAlgorithm, this.currentHeuristic);
         }
         this.algoDone = true;
@@ -884,7 +924,7 @@ Board.prototype.instantAlgorithm = function() {
   let success;
   if (this.currentAlgorithm === "bidirectional") {
     if (!this.numberOfObjects) {
-      success = bidirectional(this.nodes, this.start, this.target, this.nodesToAnimate, this.boardArray, this.currentAlgorithm, this.currentHeuristic, this);
+      success = bidirectional(this.nodes, this.start, this.target, this.nodesToAnimate, this.boardArray, this.startNodesRelative, this.currentAlgorithm, this.currentHeuristic, this);
       launchInstantAnimations(this, success, "weighted");
     } else {
       this.isObject = true;
@@ -892,22 +932,22 @@ Board.prototype.instantAlgorithm = function() {
     this.algoDone = true;
   } else if (this.currentAlgorithm === "astar") {
     if (!this.numberOfObjects) {
-      success = weightedSearchAlgorithm(this.nodes, this.start, this.target, this.nodesToAnimate, this.boardArray, this.currentAlgorithm, this.currentHeuristic);
+      success = weightedSearchAlgorithm(this.nodes, this.start, this.target, this.nodesToAnimate, this.boardArray, this.startNodesRelative, this.currentAlgorithm, this.currentHeuristic);
       launchInstantAnimations(this, success, "weighted");
     } else {
       this.isObject = true;
-      success = weightedSearchAlgorithm(this.nodes, this.start, this.object, this.objectNodesToAnimate, this.boardArray, this.currentAlgorithm, this.currentHeuristic);
+      success = weightedSearchAlgorithm(this.nodes, this.start, this.object, this.objectNodesToAnimate, this.boardArray, this.startNodesRelative, this.currentAlgorithm, this.currentHeuristic);
       launchInstantAnimations(this, success, "weighted", "object", this.currentAlgorithm);
     }
     this.algoDone = true;
   }
   if (weightedAlgorithms.includes(this.currentAlgorithm)) {
     if (!this.numberOfObjects) {
-      success = weightedSearchAlgorithm(this.nodes, this.start, this.target, this.nodesToAnimate, this.boardArray, this.currentAlgorithm, this.currentHeuristic);
+      success = weightedSearchAlgorithm(this.nodes, this.start, this.target, this.nodesToAnimate, this.boardArray, this.startNodesRelative, this.currentAlgorithm, this.currentHeuristic);
       launchInstantAnimations(this, success, "weighted");
     } else {
       this.isObject = true;
-      success = weightedSearchAlgorithm(this.nodes, this.start, this.object, this.objectNodesToAnimate, this.boardArray, this.currentAlgorithm, this.currentHeuristic);
+      success = weightedSearchAlgorithm(this.nodes, this.start, this.object, this.objectNodesToAnimate, this.boardArray, this.startNodesRelative, this.currentAlgorithm, this.currentHeuristic);
       launchInstantAnimations(this, success, "weighted", "object", this.currentAlgorithm, this.currentHeuristic);
     }
     this.algoDone = true;
@@ -1079,31 +1119,31 @@ Board.prototype.toggleButtons = function() {
         let success;
         if (this.currentAlgorithm === "bidirectional") {
           if (!this.numberOfObjects) {
-            success = bidirectional(this.nodes, this.start, this.target, this.nodesToAnimate, this.boardArray, this.currentAlgorithm, this.currentHeuristic, this);
+            success = bidirectional(this.nodes, this.start, this.target, this.nodesToAnimate, this.boardArray, this.startNodesRelative, this.currentAlgorithm, this.currentHeuristic, this);
             launchAnimations(this, success, "weighted");
           } else {
             this.isObject = true;
-            success = bidirectional(this.nodes, this.start, this.object, this.nodesToAnimate, this.boardArray, this.currentAlgorithm, this.currentHeuristic, this);
+            success = bidirectional(this.nodes, this.start, this.object, this.nodesToAnimate, this.boardArray, this.startNodesRelative, this.currentAlgorithm, this.currentHeuristic, this);
             launchAnimations(this, success, "weighted");
           }
           this.algoDone = true;
         } else if (this.currentAlgorithm === "astar") {
           if (!this.numberOfObjects) {
-            success = weightedSearchAlgorithm(this.nodes, this.start, this.target, this.nodesToAnimate, this.boardArray, this.currentAlgorithm, this.currentHeuristic);
+            success = weightedSearchAlgorithm(this.nodes, this.start, this.target, this.nodesToAnimate, this.boardArray, this.startNodesRelative, this.currentAlgorithm, this.currentHeuristic);
             launchAnimations(this, success, "weighted");
           } else {
             this.isObject = true;
-            success = weightedSearchAlgorithm(this.nodes, this.start, this.object, this.objectNodesToAnimate, this.boardArray, this.currentAlgorithm, this.currentHeuristic);
+            success = weightedSearchAlgorithm(this.nodes, this.start, this.object, this.objectNodesToAnimate, this.boardArray, this.startNodesRelative, this.currentAlgorithm, this.currentHeuristic);
             launchAnimations(this, success, "weighted", "object", this.currentAlgorithm);
           }
           this.algoDone = true;
         } else if (weightedAlgorithms.includes(this.currentAlgorithm)) {
           if (!this.numberOfObjects) {
-            success = weightedSearchAlgorithm(this.nodes, this.start, this.target, this.nodesToAnimate, this.boardArray, this.currentAlgorithm, this.currentHeuristic);
+            success = weightedSearchAlgorithm(this.nodes, this.start, this.target, this.nodesToAnimate, this.boardArray, this.startNodesRelative, this.currentAlgorithm, this.currentHeuristic);
             launchAnimations(this, success, "weighted");
           } else {
             this.isObject = true;
-            success = weightedSearchAlgorithm(this.nodes, this.start, this.object, this.objectNodesToAnimate, this.boardArray, this.currentAlgorithm, this.currentHeuristic);
+            success = weightedSearchAlgorithm(this.nodes, this.start, this.object, this.objectNodesToAnimate, this.boardArray, this.startNodesRelative, this.currentAlgorithm, this.currentHeuristic);
             launchAnimations(this, success, "weighted", "object", this.currentAlgorithm, this.currentHeuristic);
           }
           this.algoDone = true;
@@ -1307,6 +1347,26 @@ Board.prototype.toggleButtons = function() {
       this.toggleButtons();
       otherOtherMaze(this, 2, this.height - 3, 2, this.width - 3, "horizontal", false);
       mazeGenerationAnimations(this);
+    }
+
+    document.getElementById("startButtonAddStart").onclick = () => {
+
+      let initial_start = this.start.split("-");
+      let r = parseInt(initial_start[0]), c = parseInt(initial_start[1])
+      console.log(`${r}-${c}`)
+      console.log(this.nodes["15-14"].status)
+      while(this.nodes[`${r}-${c}`].status === "start") {
+        r += 1;
+      }
+      this.nodes[`${r}-${c}`].status = "start";
+      document.getElementById(`${r}-${c}`).className = "start";
+
+      this.startNodes.push(`${r}-${c}`);
+      console.log(this.startNodes);
+      console.log(this.start);
+      let initial_r = parseInt(this.start.split("-")[0]), initial_c = parseInt(this.start.split("-")[1])
+      this.startNodesRelative.push(`${r - initial_r}^${c - initial_c}`)
+
     }
 
     document.getElementById("startButtonAddObject").onclick = () => {
@@ -1912,7 +1972,8 @@ function Node(id, status) {
 module.exports = Node;
 
 },{}],13:[function(require,module,exports){
-function astar(nodes, start, target, nodesToAnimate, boardArray, name, heuristic) {
+function astar(nodes, start, target, nodesToAnimate, boardArray, startNodesRelative, name, heuristic) {
+  console.log("astar starts!")
   if (!start || !target || start === target) {
     return false;
   }
@@ -1935,7 +1996,8 @@ function astar(nodes, start, target, nodesToAnimate, boardArray, name, heuristic
     if (currentNode.id === target) {
       return "success!";
     }
-    updateNeighbors(nodes, currentNode, boardArray, target, name, start, heuristic);
+    console.log("test_1")
+    updateNeighbors(nodes, currentNode, boardArray, startNodesRelative, target, name, start, heuristic);
   }
 }
 
@@ -1956,9 +2018,10 @@ function closestNode(nodes, unvisitedNodes) {
   return currentClosest;
 }
 
-function updateNeighbors(nodes, node, boardArray, target, name, start, heuristic) {
-  let neighbors = getNeighbors(node.id, nodes, boardArray);
+function updateNeighbors(nodes, node, boardArray, startNodesRelative, target, name, start, heuristic) {
+  let neighbors = getNeighbors(node.id, nodes, boardArray, startNodesRelative);
   for (let neighbor of neighbors) {
+    console.log(`neighbor: ${neighbor}`)
     if (target) {
       updateNode(node, nodes[neighbor], nodes[target], name, nodes, nodes[start], heuristic, boardArray);
     } else {
@@ -1980,32 +2043,61 @@ function updateNode(currentNode, targetNode, actualTargetNode, name, nodes, actu
   }
 }
 
-function getNeighbors(id, nodes, boardArray) {
+function getNeighbors(id, nodes, boardArray, startNodesRelative) {
   let coordinates = id.split("-");
   let x = parseInt(coordinates[0]);
   let y = parseInt(coordinates[1]);
   let neighbors = [];
   let potentialNeighbor;
-  if (boardArray[x - 1] && boardArray[x - 1][y]) {
-    potentialNeighbor = `${(x - 1).toString()}-${y.toString()}`
-    potentialBodyNode = `${(x).toString()}-${y.toString()}`
-    if (nodes[potentialNeighbor].status !== "wall" && nodes[potentialBodyNode].status !== "wall") neighbors.push(potentialNeighbor);
-  }
-  if (boardArray[x + 1] && boardArray[x + 1][y]) {
-    potentialNeighbor = `${(x + 1).toString()}-${y.toString()}`
-    potentialBodyNode = `${(x + 2).toString()}-${y.toString()}`
-    if (nodes[potentialNeighbor].status !== "wall" && nodes[potentialBodyNode].status !== "wall") neighbors.push(potentialNeighbor);
-  }
-  if (boardArray[x][y - 1]) {
-    potentialNeighbor = `${x.toString()}-${(y - 1).toString()}`
-    potentialBodyNode = `${(x + 1).toString()}-${(y - 1).toString()}`
-    if (nodes[potentialNeighbor].status !== "wall" && nodes[potentialBodyNode].status !== "wall") neighbors.push(potentialNeighbor);
-  }
-  if (boardArray[x][y + 1]) {
-    potentialNeighbor = `${x.toString()}-${(y + 1).toString()}`
-    potentialBodyNode = `${(x + 1).toString()}-${(y + 1).toString()}`
-    if (nodes[potentialNeighbor].status !== "wall" && nodes[potentialBodyNode].status !== "wall") neighbors.push(potentialNeighbor);
-  }
+  // four direction
+  let results = [true, true, true, true]
+
+  startNodesRelative.forEach((potentialPos) => {
+    let new_x = x + parseInt(potentialPos.split("^")[0]),
+        new_y = y + parseInt(potentialPos.split("^")[1])
+    
+    if (!boardArray[new_x - 1] || !boardArray[new_x - 1][new_y] || nodes[`${new_x - 1}-${new_y}`].status === "wall") {
+      results[0] = false;
+    }
+
+    if (!boardArray[new_x + 1] || !boardArray[new_x + 1][new_y] || nodes[`${new_x + 1}-${new_y}`].status === "wall") {
+      results[1] = false;
+    }
+
+    if (!boardArray[new_x] || !boardArray[new_x][new_y - 1] || nodes[`${new_x}-${new_y - 1}`].status === "wall") {
+      results[2] = false;
+    }
+
+    if (!boardArray[new_x] || !boardArray[new_x][new_y + 1] || nodes[`${new_x}-${new_y + 1}`].status === "wall") {
+      results[3] = false;
+    }
+  })
+  
+  if (results[0]) neighbors.push(`${(x - 1).toString()}-${y.toString()}`)
+  if (results[1]) neighbors.push(`${(x + 1).toString()}-${y.toString()}`)
+  if (results[2]) neighbors.push(`${(x).toString()}-${(y - 1).toString()}`)
+  if (results[3]) neighbors.push(`${(x).toString()}-${(y + 1).toString()}`)
+
+  // if (boardArray[x - 1] && boardArray[x - 1][y]) {
+  //   potentialNeighbor = `${(x - 1).toString()}-${y.toString()}`
+  //   potentialBodyNode = `${(x).toString()}-${y.toString()}`
+  //   if (nodes[potentialNeighbor].status !== "wall" && nodes[potentialBodyNode].status !== "wall") neighbors.push(potentialNeighbor);
+  // }
+  // if (boardArray[x + 1] && boardArray[x + 1][y]) {
+  //   potentialNeighbor = `${(x + 1).toString()}-${y.toString()}`
+  //   potentialBodyNode = `${(x + 2).toString()}-${y.toString()}`
+  //   if (nodes[potentialNeighbor].status !== "wall" && nodes[potentialBodyNode].status !== "wall") neighbors.push(potentialNeighbor);
+  // }
+  // if (boardArray[x][y - 1]) {
+  //   potentialNeighbor = `${x.toString()}-${(y - 1).toString()}`
+  //   potentialBodyNode = `${(x + 1).toString()}-${(y - 1).toString()}`
+  //   if (nodes[potentialNeighbor].status !== "wall" && nodes[potentialBodyNode].status !== "wall") neighbors.push(potentialNeighbor);
+  // }
+  // if (boardArray[x][y + 1]) {
+  //   potentialNeighbor = `${x.toString()}-${(y + 1).toString()}`
+  //   potentialBodyNode = `${(x + 1).toString()}-${(y + 1).toString()}`
+  //   if (nodes[potentialNeighbor].status !== "wall" && nodes[potentialBodyNode].status !== "wall") neighbors.push(potentialNeighbor);
+  // }
   return neighbors;
 }
 
@@ -2186,8 +2278,8 @@ module.exports = astar;
 },{}],14:[function(require,module,exports){
 const astar = require("./astar");
 
-function bidirectional(nodes, start, target, nodesToAnimate, boardArray, name, heuristic, board) {
-  if (name === "astar") return astar(nodes, start, target, nodesToAnimate, boardArray, name)
+function bidirectional(nodes, start, target, nodesToAnimate, boardArray, startNodesRelative, name, heuristic, board) {
+  if (name === "astar") return astar(nodes, start, target, nodesToAnimate, boardArray, startNodesRelative, name)
   if (!start || !target || start === target) {
     return false;
   }
@@ -2660,8 +2752,8 @@ module.exports = unweightedSearchAlgorithm;
 },{}],16:[function(require,module,exports){
 const astar = require("./astar");
 
-function weightedSearchAlgorithm(nodes, start, target, nodesToAnimate, boardArray, name, heuristic) {
-  if (name === "astar") return astar(nodes, start, target, nodesToAnimate, boardArray, name)
+function weightedSearchAlgorithm(nodes, start, target, nodesToAnimate, boardArray, startNodesRelative, name, heuristic) {
+  if (name === "astar") return astar(nodes, start, target, nodesToAnimate, boardArray, startNodesRelative, name)
   if (!start || !target || start === target) {
     return false;
   }
