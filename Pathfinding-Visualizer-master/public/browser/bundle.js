@@ -454,9 +454,6 @@ Board.prototype.addEventListeners = function() {
             let initial_r = parseInt(this.start.split("-")[0]), initial_c = parseInt(this.start.split("-")[1]),
                 r = parseInt(currentNode.id.split("-")[0]), c = parseInt(currentNode.id.split("-")[1])
             this.startNodesRelative.push(`${r - initial_r}^${c - initial_c}`)
-            console.log(board.startNodes);
-            console.log(board.startNodesRelative);
-            console.log(`initial start: ${board.start}`)
             
           } else if (board.pressedNodeStatus === "object") {
             board.object = currentId;
@@ -2383,28 +2380,40 @@ function updateNodeTwo(currentNode, targetNode, actualTargetNode, name, nodes, a
   }
 }
 
-function getNeighbors(id, nodes, boardArray) {
+function getNeighbors(id, nodes, boardArray, startNodesRelative) {
   let coordinates = id.split("-");
   let x = parseInt(coordinates[0]);
   let y = parseInt(coordinates[1]);
   let neighbors = [];
   let potentialNeighbor;
-  if (boardArray[x - 1] && boardArray[x - 1][y]) {
-    potentialNeighbor = `${(x - 1).toString()}-${y.toString()}`
-    if (nodes[potentialNeighbor].status !== "wall") neighbors.push(potentialNeighbor);
-  }
-  if (boardArray[x + 1] && boardArray[x + 1][y]) {
-    potentialNeighbor = `${(x + 1).toString()}-${y.toString()}`
-    if (nodes[potentialNeighbor].status !== "wall") neighbors.push(potentialNeighbor);
-  }
-  if (boardArray[x][y - 1]) {
-    potentialNeighbor = `${x.toString()}-${(y - 1).toString()}`
-    if (nodes[potentialNeighbor].status !== "wall") neighbors.push(potentialNeighbor);
-  }
-  if (boardArray[x][y + 1]) {
-    potentialNeighbor = `${x.toString()}-${(y + 1).toString()}`
-    if (nodes[potentialNeighbor].status !== "wall") neighbors.push(potentialNeighbor);
-  }
+
+  let results = [true, true, true, true]
+
+  startNodesRelative.forEach((potentialPos) => {
+    let new_x = x + parseInt(potentialPos.split("^")[0]),
+        new_y = y + parseInt(potentialPos.split("^")[1])
+    
+    if (!boardArray[new_x - 1] || !boardArray[new_x - 1][new_y] || nodes[`${new_x - 1}-${new_y}`].status === "wall") {
+      results[0] = false;
+    }
+
+    if (!boardArray[new_x + 1] || !boardArray[new_x + 1][new_y] || nodes[`${new_x + 1}-${new_y}`].status === "wall") {
+      results[1] = false;
+    }
+
+    if (!boardArray[new_x] || !boardArray[new_x][new_y - 1] || nodes[`${new_x}-${new_y - 1}`].status === "wall") {
+      results[2] = false;
+    }
+
+    if (!boardArray[new_x] || !boardArray[new_x][new_y + 1] || nodes[`${new_x}-${new_y + 1}`].status === "wall") {
+      results[3] = false;
+    }
+  })
+  
+  if (results[0]) neighbors.push(`${(x - 1).toString()}-${y.toString()}`)
+  if (results[1]) neighbors.push(`${(x + 1).toString()}-${y.toString()}`)
+  if (results[2]) neighbors.push(`${(x).toString()}-${(y - 1).toString()}`)
+  if (results[3]) neighbors.push(`${(x).toString()}-${(y + 1).toString()}`)
   return neighbors;
 }
 
