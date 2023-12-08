@@ -819,12 +819,12 @@ Board.prototype.clearPath = function(clickedButton) {
 
       else if (this.currentAlgorithm === "floyd_warshall") {
         if (!this.numberOfObjects) {
-          success = weightedSearchAlgorithm(this.nodes, this.start, this.target, this.nodesToAnimate, this.boardArray, this.currentAlgorithm, this.currentHeuristic);
+          success = weightedSearchAlgorithm(this.nodes, this.start, this.target, this.nodesToAnimate, this.boardArray, this.startNodesRelative, this.currentAlgorithm, this.currentHeuristic);
           launchAnimations(this, success, "weighted");
         } 
         else {
           this.isObject = true;
-          success = weightedSearchAlgorithm(this.nodes, this.start, this.object, this.objectNodesToAnimate, this.boardArray, this.currentAlgorithm, this.currentHeuristic);
+          success = weightedSearchAlgorithm(this.nodes, this.start, this.object, this.objectNodesToAnimate, this.boardArray, this.startNodesRelative, this.currentAlgorithm, this.currentHeuristic);
           launchAnimations(this, success, "weighted", "object", this.currentAlgorithm, this.currentHeuristic);
         }
         this.algoDone = true;
@@ -950,7 +950,7 @@ Board.prototype.instantAlgorithm = function() {
   // update
   else if (this.currentAlgorithm === "floyd_warshall") {
     if (!this.numberOfObjects) {
-      success = weightedSearchAlgorithm(this.nodes, this.start, this.target, this.nodesToAnimate, this.boardArray, this.currentAlgorithm, this.currentHeuristic);
+      success = weightedSearchAlgorithm(this.nodes, this.start, this.target, this.nodesToAnimate, this.boardArray, this.startNodesRelative, this.currentAlgorithm, this.currentHeuristic);
       launchInstantAnimations(this, success, "weighted");
     } else {
       this.isObject = true;
@@ -1179,11 +1179,11 @@ Board.prototype.toggleButtons = function() {
         // update
         if (this.currentAlgorithm === "floyd_warshall") {
           if (!this.numberOfObjects) {
-            success = weightedSearchAlgorithm(this.nodes, this.start, this.target, this.nodesToAnimate, this.boardArray, this.currentAlgorithm, this.currentHeuristic, this);
+            success = weightedSearchAlgorithm(this.nodes, this.start, this.target, this.nodesToAnimate, this.boardArray, this.startNodesRelative, this.currentAlgorithm, this.currentHeuristic, this);
             launchAnimations(this, success, "weighted");
           } else {
             this.isObject = true;
-            success = weightedSearchAlgorithm(this.nodes, this.start, this.object, this.nodesToAnimate, this.boardArray, this.currentAlgorithm, this.currentHeuristic, this);
+            success = weightedSearchAlgorithm(this.nodes, this.start, this.object, this.nodesToAnimate, this.boardArray, this.startNodesRelative, this.currentAlgorithm, this.currentHeuristic, this);
             launchAnimations(this, success, "weighted");
           }
           this.algoDone = true;
