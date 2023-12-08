@@ -7,6 +7,10 @@ app.get("/", (req, res) => {
   res.sendFile(__dirname + "/index.html");
 })
 
+app.get("/double", (req, res) => {
+  res.sendFile(__dirname + "/index1.html");
+})
+
 app.listen(1337, () => {
   console.log("The server is up and running!");
 });
