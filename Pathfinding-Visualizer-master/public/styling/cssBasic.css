@@ -300,13 +300,13 @@
   padding: 0 28px 0 0;
 }
 
-#actualStartButton {
+#actualStartButton1, #actualStartButton2 {
   /*color: red;*/
   background-color: none;
 }
 
 #mainGrid{
-  position: absolute;
+  /* position: absolute; */
   z-index: 1;
 }
 
@@ -409,7 +409,7 @@
   padding: 10px 50px 0 0;
 }*/
 
-#board{
+#board1, #board2{
   border-collapse:collapse;
   /*position: center*/
 }
@@ -424,7 +424,7 @@
   margin: 0 0.42em;
 }
 
-#board {
+#board1, #board2{
   margin-left: 5px;
   margin-right: 5px;
 }
@@ -437,13 +437,19 @@
   z-index: 2;
 }*/
 
-#board td{
+#board1 td{
   /*border: 1px solid rgb(175, 216, 248);*/
   width: 25px;
   height: 25px;
 }
 
-#startButtonStart {
+#board2 td{
+  /*border: 1px solid rgb(175, 216, 248);*/
+  width: 25px;
+  height: 25px;
+}
+
+#startButtonStart1, #startButtonStart2 {
   padding-left: 20px;
   padding-right: 20px;
 }
