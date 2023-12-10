@@ -23,7 +23,7 @@ function launchAnimations(board, success, type, object, algorithm, heuristic) {
               if (type === "weighted") {
                 newSuccess = weightedSearchAlgorithm(board.nodes, board.object, board.target, board.nodesToAnimate, board.boardArray, this.startNodesRelative, board.startNodesRelative, algorithm, heuristic);
               } else {
-                newSuccess = unweightedSearchAlgorithm(board.nodes, board.object, board.target, board.nodesToAnimate, board.boardArray, algorithm);
+                newSuccess = unweightedSearchAlgorithm(board.nodes, board.object, board.target, board.nodesToAnimate, board.boardArray, this.startNodesRelative, algorithm);
               }
             }
             document.getElementById(board.object).className = "visitedObjectNode";
@@ -124,9 +124,9 @@ function launchAnimations(board, success, type, object, algorithm, heuristic) {
           board.clearNodeStatuses();
           let newSuccess;
           if (type === "weighted") {
-            newSuccess = weightedSearchAlgorithm(board.nodes, board.object, board.target, board.nodesToAnimate, board.boardArray, this.startNodesRelative, algorithm);
+            newSuccess = weightedSearchAlgorithm(board.nodes, board.object, board.target, board.nodesToAnimate, board.boardArray, board.startNodesRelative, algorithm);
           } else {
-            newSuccess = unweightedSearchAlgorithm(board.nodes, board.object, board.target, board.nodesToAnimate, board.boardArray, algorithm);
+            newSuccess = unweightedSearchAlgorithm(board.nodes, board.object, board.target, board.nodesToAnimate, board.boardArray, board.startNodesRelative, algorithm);
           }
           launchAnimations(board, newSuccess, type);
           return;
@@ -199,9 +199,9 @@ function launchInstantAnimations(board, success, type, object, algorithm, heuris
       board.clearNodeStatuses();
       let newSuccess;
       if (type === "weighted") {
-        newSuccess = weightedSearchAlgorithm(board.nodes, board.object, board.target, board.nodesToAnimate, board.boardArray, this.startNodesRelative, algorithm, heuristic);
+        newSuccess = weightedSearchAlgorithm(board.nodes, board.object, board.target, board.nodesToAnimate, board.boardArray, board.startNodesRelative, algorithm, heuristic);
       } else {
-        newSuccess = unweightedSearchAlgorithm(board.nodes, board.object, board.target, board.nodesToAnimate, board.boardArray, algorithm);
+        newSuccess = unweightedSearchAlgorithm(board.nodes, board.object, board.target, board.nodesToAnimate, board.boardArray, board.startNodesRelative, algorithm);
       }
       launchInstantAnimations(board, newSuccess, type);
       shortestNodes = board.objectShortestPathNodesToAnimate.concat(board.shortestPathNodesToAnimate);
@@ -242,9 +242,9 @@ function launchInstantAnimations(board, success, type, object, algorithm, heuris
     board.clearNodeStatuses();
     let newSuccess;
     if (type === "weighted") {
-      newSuccess = weightedSearchAlgorithm(board.nodes, board.object, board.target, board.nodesToAnimate, board.boardArray, this.startNodesRelative, algorithm);
+      newSuccess = weightedSearchAlgorithm(board.nodes, board.object, board.target, board.nodesToAnimate, board.boardArray, board.startNodesRelative, algorithm);
     } else {
-      newSuccess = unweightedSearchAlgorithm(board.nodes, board.object, board.target, board.nodesToAnimate, board.boardArray, algorithm);
+      newSuccess = unweightedSearchAlgorithm(board.nodes, board.object, board.target, board.nodesToAnimate, board.boardArray, board.startNodesRelative, algorithm);
     }
     launchInstantAnimations(board, newSuccess, type);
   } else {
@@ -861,11 +861,11 @@ Board1.prototype.clearPath = function(clickedButton) {
         this.algoDone = true;
       } else if (unweightedAlgorithms.includes(this.currentAlgorithm)) {
         if (!this.numberOfObjects) {
-          success = unweightedSearchAlgorithm(this.nodes, this.start, this.target, this.nodesToAnimate, this.boardArray, this.currentAlgorithm);
+          success = unweightedSearchAlgorithm(this.nodes, this.start, this.target, this.nodesToAnimate, this.boardArray, this.startNodesRelative, this.currentAlgorithm);
           launchAnimations(this, success, "unweighted");
         } else {
           this.isObject = true;
-          success = unweightedSearchAlgorithm(this.nodes, this.start, this.object, this.objectNodesToAnimate, this.boardArray, this.currentAlgorithm);
+          success = unweightedSearchAlgorithm(this.nodes, this.start, this.object, this.objectNodesToAnimate, this.boardArray, this.startNodesRelative, this.currentAlgorithm);
           launchAnimations(this, success, "unweighted", "object", this.currentAlgorithm);
         }
         this.algoDone = true;
@@ -991,11 +991,11 @@ Board1.prototype.instantAlgorithm = function() {
     this.algoDone = true;
   } else if (unweightedAlgorithms.includes(this.currentAlgorithm)) {
     if (!this.numberOfObjects) {
-      success = unweightedSearchAlgorithm(this.nodes, this.start, this.target, this.nodesToAnimate, this.boardArray, this.currentAlgorithm);
+      success = unweightedSearchAlgorithm(this.nodes, this.start, this.target, this.nodesToAnimate, this.boardArray, this.startNodesRelative, this.currentAlgorithm);
       launchInstantAnimations(this, success, "unweighted");
     } else {
       this.isObject = true;
-      success = unweightedSearchAlgorithm(this.nodes, this.start, this.object, this.objectNodesToAnimate, this.boardArray, this.currentAlgorithm);
+      success = unweightedSearchAlgorithm(this.nodes, this.start, this.object, this.objectNodesToAnimate, this.boardArray, this.startNodesRelative, this.currentAlgorithm);
       launchInstantAnimations(this, success, "unweighted", "object", this.currentAlgorithm);
     }
     this.algoDone = true;
@@ -1155,7 +1155,6 @@ Board1.prototype.toggleTutorialButtons = function() {
 };
 
 Board1.prototype.toggleButtons = function() {
-  console.log("board1 toggle buttons!")
   document.getElementById("refreshButton").onclick = () => {
     window.location.reload(true);
   }
@@ -1221,11 +1220,11 @@ Board1.prototype.toggleButtons = function() {
           this.algoDone = true;
         } else if (unweightedAlgorithms.includes(this.currentAlgorithm)) {
           if (!this.numberOfObjects) {
-            success = unweightedSearchAlgorithm(this.nodes, this.start, this.target, this.nodesToAnimate, this.boardArray, this.currentAlgorithm);
+            success = unweightedSearchAlgorithm(this.nodes, this.start, this.target, this.nodesToAnimate, this.boardArray, this.startNodesRelative, this.currentAlgorithm);
             launchAnimations(this, success, "unweighted");
           } else {
             this.isObject = true;
-            success = unweightedSearchAlgorithm(this.nodes, this.start, this.object, this.objectNodesToAnimate, this.boardArray, this.currentAlgorithm);
+            success = unweightedSearchAlgorithm(this.nodes, this.start, this.object, this.objectNodesToAnimate, this.boardArray, this.startNodesRelative, this.currentAlgorithm);
             launchAnimations(this, success, "unweighted", "object", this.currentAlgorithm);
           }
           this.algoDone = true;
@@ -1289,8 +1288,8 @@ Board1.prototype.toggleButtons = function() {
       this.changeStartNodeImages();
     }
         // update
-        document.getElementById("startButtonFloyd").onclick = () => {
-          document.getElementById("startButtonStart").innerHTML = '<button id="actualStartButton" class="btn btn-default navbar-btn" type="button">Visualize Floyd-Warshall!</button>'
+        document.getElementById("startButtonFloyd1").onclick = () => {
+          document.getElementById("startButtonStart1").innerHTML = '<button id="actualStartButton1" class="btn btn-default navbar-btn" type="button">Visualize Floyd-Warshall!</button>'
           this.currentAlgorithm = "floyd_warshall";
           // this.currentHeuristic = "manhattanDistance"
           this.changeStartNodeImages();
@@ -1434,7 +1433,6 @@ Board1.prototype.toggleButtons = function() {
 
       let initial_start = this.start.split("-");
       let r = parseInt(initial_start[0]), c = parseInt(initial_start[1])
-      console.log(`${r}-${c}`)
       console.log(this.nodes["15-14"].status)
       while(this.nodes[`${r}-${c}`].status === "start") {
         r += 1;
@@ -1443,8 +1441,8 @@ Board1.prototype.toggleButtons = function() {
       document.getElementById(`${r}-${c}`).className = "start";
 
       this.startNodes.push(`${r}-${c}`);
-      console.log(this.startNodes);
-      console.log(this.start);
+      // console.log(this.startNodes);
+      // console.log(this.start);
       let initial_r = parseInt(this.start.split("-")[0]), initial_c = parseInt(this.start.split("-")[1])
       this.startNodesRelative.push(`${r - initial_r}^${c - initial_c}`)
 
@@ -1494,7 +1492,7 @@ Board1.prototype.toggleButtons = function() {
     document.getElementById("startButtonCreateMazeWeights").className = "navbar-inverse navbar-nav";
     document.getElementById("startStairDemonstration").className = "navbar-inverse navbar-nav";
      // update
-     document.getElementById("startButtonFloyd").className = "navbar-inverse navbar-nav";
+     document.getElementById("startButtonFloyd1").className = "navbar-inverse navbar-nav";
     document.getElementById("startButtonDFS1").className = "navbar-inverse navbar-nav";
     document.getElementById("startButtonBFS1").className = "navbar-inverse navbar-nav";
     document.getElementById("startButtonDijkstra1").className = "navbar-inverse navbar-nav";
@@ -1521,7 +1519,7 @@ Board1.prototype.toggleButtons = function() {
     document.getElementById("startButtonAStar31").onclick = null;
     document.getElementById("startButtonBidirectional1").onclick = null;
     // update
-    document.getElementById("startButtonFloyd").onclick = null;
+    document.getElementById("startButtonFloyd1").onclick = null;
     document.getElementById("startButtonCreateMazeOne").onclick = null;
     document.getElementById("startButtonCreateMazeTwo").onclick = null;
     document.getElementById("startButtonCreateMazeThree").onclick = null;
@@ -1568,6 +1566,8 @@ function Board2(height, width) {
   this.height = height;
   this.width = width;
   this.start = null;
+  this.startNodes = [];
+  this.startNodesRelative = ["0^0"];
   this.target = null;
   this.object = null;
   this.boardArray = [];
@@ -1579,6 +1579,7 @@ function Board2(height, width) {
   this.wallsToAnimate = [];
   this.mouseDown = false;
   this.pressedNodeStatus = "normal";
+  this.previousNode;
   this.previouslyPressedNodeStatus = null;
   this.previouslySwitchedNode = null;
   this.previouslySwitchedNodeWeight = 0;
@@ -1594,7 +1595,6 @@ function Board2(height, width) {
 
 
 Board2.prototype.initialise = function() {
-  console.log("board2 init");
   this.createGrid();
   this.addEventListeners();
   this.toggleButtons();
@@ -1642,6 +1642,16 @@ Board2.prototype.addEventListeners = function() {
           board.mouseDown = true;
           if (currentNode.status === "start" || currentNode.status === "target" || currentNode.status === "object") {
             board.pressedNodeStatus = currentNode.status;
+            board.previousNode = currentNode;
+            document.getElementById(currentNode.id).className = "unvisited";
+
+            let index = this.startNodes.indexOf(board.previousNode.id);
+            this.startNodes.splice(index, 1);
+
+            let initial_r = parseInt(this.start.slice(7).split("-")[0]), initial_c = parseInt(this.start.slice(7).split("-")[1]),
+                r = parseInt(currentNode.id.slice(7).split("-")[0]), c = parseInt(currentNode.id.slice(7).split("-")[1])
+            let relativeIndex = this.startNodesRelative.indexOf(`${r - initial_r}^${c - initial_c}`)
+            this.startNodesRelative.splice(relativeIndex, 1)
           } else {
             board.pressedNodeStatus = "normal";
             board.changeNormalNode(currentNode);
@@ -1654,7 +1664,15 @@ Board2.prototype.addEventListeners = function() {
           if (board.pressedNodeStatus === "target") {
             board.target = currentId;
           } else if (board.pressedNodeStatus === "start") {
-            board.start = currentId;
+            // board.start = currentId;
+            board.previousNode.status = "unvisited";
+            let prevN = document.getElementById(board.previousNode.id);
+            prevN.className = "unvisited";
+
+            board.startNodes.push(currentNode.id);
+            let initial_r = parseInt(this.start.slice(7).split("-")[0]), initial_c = parseInt(this.start.slice(7).split("-")[1]),
+                r = parseInt(currentNode.id.slice(7).split("-")[0]), c = parseInt(currentNode.id.slice(7).split("-")[1])
+            this.startNodesRelative.push(`${r - initial_r}^${c - initial_c}`)
           } else if (board.pressedNodeStatus === "object") {
             board.object = currentId;
           }
@@ -1671,7 +1689,7 @@ Board2.prototype.addEventListeners = function() {
                 board.redoAlgorithm();
               }
             } else if (board.pressedNodeStatus === "start") {
-              board.start = currentId;
+              // board.start = currentId;
               if (board.algoDone) {
                 board.redoAlgorithm();
               }
@@ -2012,31 +2030,31 @@ Board2.prototype.clearPath = function(clickedButton) {
         this.algoDone = true;
       } else if (this.currentAlgorithm === "astar") {
         if (!this.numberOfObjects) {
-          success = weightedSearchAlgorithm(this.nodes, this.start, this.target, this.nodesToAnimate, this.boardArray, this.currentAlgorithm, this.currentHeuristic);
+          success = weightedSearchAlgorithm(this.nodes, this.start, this.target, this.nodesToAnimate, this.boardArray, this.startNodesRelative, this.currentAlgorithm, this.currentHeuristic);
           launchAnimations(this, success, "weighted");
         } else {
           this.isObject = true;
-          success = weightedSearchAlgorithm(this.nodes, this.start, this.object, this.objectNodesToAnimate, this.boardArray, this.currentAlgorithm, this.currentHeuristic);
+          success = weightedSearchAlgorithm(this.nodes, this.start, this.object, this.objectNodesToAnimate, this.boardArray, this.startNodesRelative, this.currentAlgorithm, this.currentHeuristic);
           launchAnimations(this, success, "weighted", "object", this.currentAlgorithm, this.currentHeuristic);
         }
         this.algoDone = true;
       } else if (weightedAlgorithms.includes(this.currentAlgorithm)) {
         if (!this.numberOfObjects) {
-          success = weightedSearchAlgorithm(this.nodes, this.start, this.target, this.nodesToAnimate, this.boardArray, this.currentAlgorithm, this.currentHeuristic);
+          success = weightedSearchAlgorithm(this.nodes, this.start, this.target, this.nodesToAnimate, this.boardArray, this.startNodesRelative, this.currentAlgorithm, this.currentHeuristic);
           launchAnimations(this, success, "weighted");
         } else {
           this.isObject = true;
-          success = weightedSearchAlgorithm(this.nodes, this.start, this.object, this.objectNodesToAnimate, this.boardArray, this.currentAlgorithm, this.currentHeuristic);
+          success = weightedSearchAlgorithm(this.nodes, this.start, this.object, this.objectNodesToAnimate, this.boardArray, this.startNodesRelative, this.currentAlgorithm, this.currentHeuristic);
           launchAnimations(this, success, "weighted", "object", this.currentAlgorithm, this.currentHeuristic);
         }
         this.algoDone = true;
       } else if (unweightedAlgorithms.includes(this.currentAlgorithm)) {
         if (!this.numberOfObjects) {
-          success = unweightedSearchAlgorithm(this.nodes, this.start, this.target, this.nodesToAnimate, this.boardArray, this.currentAlgorithm);
+          success = unweightedSearchAlgorithm(this.nodes, this.start, this.target, this.nodesToAnimate, this.boardArray, this.startNodesRelative, this.currentAlgorithm);
           launchAnimations(this, success, "unweighted");
         } else {
           this.isObject = true;
-          success = unweightedSearchAlgorithm(this.nodes, this.start, this.object, this.objectNodesToAnimate, this.boardArray, this.currentAlgorithm);
+          success = unweightedSearchAlgorithm(this.nodes, this.start, this.object, this.objectNodesToAnimate, this.boardArray, this.startNodesRelative, this.currentAlgorithm);
           launchAnimations(this, success, "unweighted", "object", this.currentAlgorithm);
         }
         this.algoDone = true;
@@ -2125,32 +2143,32 @@ Board2.prototype.instantAlgorithm = function() {
     this.algoDone = true;
   } else if (this.currentAlgorithm === "astar") {
     if (!this.numberOfObjects) {
-      success = weightedSearchAlgorithm(this.nodes, this.start, this.target, this.nodesToAnimate, this.boardArray, this.currentAlgorithm, this.currentHeuristic);
+      success = weightedSearchAlgorithm(this.nodes, this.start, this.target, this.nodesToAnimate, this.boardArray, this.startNodesRelative, this.currentAlgorithm, this.currentHeuristic);
       launchInstantAnimations(this, success, "weighted");
     } else {
       this.isObject = true;
-      success = weightedSearchAlgorithm(this.nodes, this.start, this.object, this.objectNodesToAnimate, this.boardArray, this.currentAlgorithm, this.currentHeuristic);
+      success = weightedSearchAlgorithm(this.nodes, this.start, this.object, this.objectNodesToAnimate, this.boardArray, this.startNodesRelative, this.currentAlgorithm, this.currentHeuristic);
       launchInstantAnimations(this, success, "weighted", "object", this.currentAlgorithm);
     }
     this.algoDone = true;
   }
   if (weightedAlgorithms.includes(this.currentAlgorithm)) {
     if (!this.numberOfObjects) {
-      success = weightedSearchAlgorithm(this.nodes, this.start, this.target, this.nodesToAnimate, this.boardArray, this.currentAlgorithm, this.currentHeuristic);
+      success = weightedSearchAlgorithm(this.nodes, this.start, this.target, this.nodesToAnimate, this.boardArray, this.startNodesRelative, this.currentAlgorithm, this.currentHeuristic);
       launchInstantAnimations(this, success, "weighted");
     } else {
       this.isObject = true;
-      success = weightedSearchAlgorithm(this.nodes, this.start, this.object, this.objectNodesToAnimate, this.boardArray, this.currentAlgorithm, this.currentHeuristic);
+      success = weightedSearchAlgorithm(this.nodes, this.start, this.object, this.objectNodesToAnimate, this.boardArray, this.startNodesRelative, this.currentAlgorithm, this.currentHeuristic);
       launchInstantAnimations(this, success, "weighted", "object", this.currentAlgorithm, this.currentHeuristic);
     }
     this.algoDone = true;
   } else if (unweightedAlgorithms.includes(this.currentAlgorithm)) {
     if (!this.numberOfObjects) {
-      success = unweightedSearchAlgorithm(this.nodes, this.start, this.target, this.nodesToAnimate, this.boardArray, this.currentAlgorithm);
+      success = unweightedSearchAlgorithm(this.nodes, this.start, this.target, this.nodesToAnimate, this.boardArray, this.startNodesRelative, this.currentAlgorithm);
       launchInstantAnimations(this, success, "unweighted");
     } else {
       this.isObject = true;
-      success = unweightedSearchAlgorithm(this.nodes, this.start, this.object, this.objectNodesToAnimate, this.boardArray, this.currentAlgorithm);
+      success = unweightedSearchAlgorithm(this.nodes, this.start, this.object, this.objectNodesToAnimate, this.boardArray, this.startNodesRelative, this.currentAlgorithm);
       launchInstantAnimations(this, success, "unweighted", "object", this.currentAlgorithm);
     }
     this.algoDone = true;
@@ -2312,41 +2330,41 @@ Board2.prototype.toggleButtons = function() {
         let success;
         if (this.currentAlgorithm === "bidirectional") {
           if (!this.numberOfObjects) {
-            success = bidirectional(this.nodes, this.start, this.target, this.nodesToAnimate, this.boardArray, this.currentAlgorithm, this.currentHeuristic, this);
+            success = bidirectional(this.nodes, this.start, this.target, this.nodesToAnimate, this.boardArray, this.startNodesRelative, this.currentAlgorithm, this.currentHeuristic, this);
             launchAnimations(this, success, "weighted");
           } else {
             this.isObject = true;
-            success = bidirectional(this.nodes, this.start, this.object, this.nodesToAnimate, this.boardArray, this.currentAlgorithm, this.currentHeuristic, this);
+            success = bidirectional(this.nodes, this.start, this.object, this.nodesToAnimate, this.boardArray, this.startNodesRelative, this.currentAlgorithm, this.currentHeuristic, this);
             launchAnimations(this, success, "weighted");
           }
           this.algoDone = true;
         } else if (this.currentAlgorithm === "astar") {
           if (!this.numberOfObjects) {
-            success = weightedSearchAlgorithm(this.nodes, this.start, this.target, this.nodesToAnimate, this.boardArray, this.currentAlgorithm, this.currentHeuristic);
+            success = weightedSearchAlgorithm(this.nodes, this.start, this.target, this.nodesToAnimate, this.boardArray, this.startNodesRelative, this.currentAlgorithm, this.currentHeuristic);
             launchAnimations(this, success, "weighted");
           } else {
             this.isObject = true;
-            success = weightedSearchAlgorithm(this.nodes, this.start, this.object, this.objectNodesToAnimate, this.boardArray, this.currentAlgorithm, this.currentHeuristic);
+            success = weightedSearchAlgorithm(this.nodes, this.start, this.object, this.objectNodesToAnimate, this.boardArray, this.startNodesRelative, this.currentAlgorithm, this.currentHeuristic);
             launchAnimations(this, success, "weighted", "object", this.currentAlgorithm);
           }
           this.algoDone = true;
         } else if (weightedAlgorithms.includes(this.currentAlgorithm)) {
           if (!this.numberOfObjects) {
-            success = weightedSearchAlgorithm(this.nodes, this.start, this.target, this.nodesToAnimate, this.boardArray, this.currentAlgorithm, this.currentHeuristic);
+            success = weightedSearchAlgorithm(this.nodes, this.start, this.target, this.nodesToAnimate, this.boardArray, this.startNodesRelative, this.currentAlgorithm, this.currentHeuristic);
             launchAnimations(this, success, "weighted");
           } else {
             this.isObject = true;
-            success = weightedSearchAlgorithm(this.nodes, this.start, this.object, this.objectNodesToAnimate, this.boardArray, this.currentAlgorithm, this.currentHeuristic);
+            success = weightedSearchAlgorithm(this.nodes, this.start, this.object, this.objectNodesToAnimate, this.boardArray, this.startNodesRelative, this.currentAlgorithm, this.currentHeuristic);
             launchAnimations(this, success, "weighted", "object", this.currentAlgorithm, this.currentHeuristic);
           }
           this.algoDone = true;
         } else if (unweightedAlgorithms.includes(this.currentAlgorithm)) {
           if (!this.numberOfObjects) {
-            success = unweightedSearchAlgorithm(this.nodes, this.start, this.target, this.nodesToAnimate, this.boardArray, this.currentAlgorithm);
+            success = unweightedSearchAlgorithm(this.nodes, this.start, this.target, this.nodesToAnimate, this.boardArray, this.startNodesRelative, this.currentAlgorithm);
             launchAnimations(this, success, "unweighted");
           } else {
             this.isObject = true;
-            success = unweightedSearchAlgorithm(this.nodes, this.start, this.object, this.objectNodesToAnimate, this.boardArray, this.currentAlgorithm);
+            success = unweightedSearchAlgorithm(this.nodes, this.start, this.object, this.objectNodesToAnimate, this.boardArray, this.startNodesRelative, this.currentAlgorithm);
             launchAnimations(this, success, "unweighted", "object", this.currentAlgorithm);
           }
           this.algoDone = true;
@@ -2405,6 +2423,14 @@ Board2.prototype.toggleButtons = function() {
       document.getElementById("startButtonStart2").innerHTML = '<button id="actualStartButton2" class="btn btn-default navbar-btn" type="button">Visualize Swarm!</button>'
       this.currentAlgorithm = "CLA";
       this.currentHeuristic = "manhattanDistance"
+      this.changeStartNodeImages();
+    }
+
+    // update
+    document.getElementById("startButtonFloyd2").onclick = () => {
+      document.getElementById("startButtonStart1").innerHTML = '<button id="actualStartButton" class="btn btn-default navbar-btn" type="button">Visualize Floyd-Warshall!</button>'
+      this.currentAlgorithm = "floyd_warshall";
+      // this.currentHeuristic = "manhattanDistance"
       this.changeStartNodeImages();
     }
 
@@ -2548,7 +2574,7 @@ Board2.prototype.toggleButtons = function() {
         if (innerHTML.includes("Add")) {
           let r = Math.floor(this.height / 2);
           let c = Math.floor(2 * this.width / 4);
-          let objectNodeId = `${r}-${c}`;
+          let objectNodeId = `board2_${r}-${c}`;
           if (this.target === objectNodeId || this.start === objectNodeId || this.numberOfObjects === 1) {
             console.log("Failure to place object.");
           } else {
@@ -2657,11 +2683,8 @@ let height = Math.floor(($(document).height() - navbarHeight - textHeight) / 28)
 let width = Math.floor($(document).width() / 25);
 let newBoard = new Board1(height, width)
 let newBoard2 = new Board2(height, width)
-console.log("starting")
 newBoard.initialise(); // exception, program stopped
-console.log("board 1 finished!")
 newBoard2.initialise();
-console.log("board 2 finished!")
 
 // To-do - Changes to be made beyond this point for board 2 event handling
 window.onkeydown = (e) => {
@@ -3156,7 +3179,6 @@ module.exports = Node;
 
 },{}],13:[function(require,module,exports){
 function astar(nodes, start, target, nodesToAnimate, boardArray, startNodesRelative, name, heuristic) {
-  console.log("astar starts!")
   if (!start || !target || start === target) {
     return false;
   }
@@ -3167,6 +3189,9 @@ function astar(nodes, start, target, nodesToAnimate, boardArray, startNodesRelat
   while (unvisitedNodes.length) {
     let currentNode = closestNode(nodes, unvisitedNodes);
     let currentCoordinates = currentNode.id.split("-");
+    if (currentNode.id[0] === "b") {
+      currentCoordinates = currentNode.id.slice(7).split("-")
+    }
     let x1 = parseInt(currentCoordinates[0]);
     let y1 = parseInt(currentCoordinates[1]);
     let bodyX = x1 + 1
@@ -3227,8 +3252,14 @@ function updateNode(currentNode, targetNode, actualTargetNode, name, nodes, actu
 
 function getNeighbors(id, nodes, boardArray, startNodesRelative) {
   let coordinates = id.split("-");
+  let prefix = ""
+  if (id[0] === "b") {
+    coordinates = id.slice(7).split("-");
+    prefix = "board2_"
+  }
   let x = parseInt(coordinates[0]);
   let y = parseInt(coordinates[1]);
+  
   let neighbors = [];
   let potentialNeighbor;
   // four direction
@@ -3238,27 +3269,27 @@ function getNeighbors(id, nodes, boardArray, startNodesRelative) {
     let new_x = x + parseInt(potentialPos.split("^")[0]),
         new_y = y + parseInt(potentialPos.split("^")[1])
     
-    if (!boardArray[new_x - 1] || !boardArray[new_x - 1][new_y] || nodes[`${new_x - 1}-${new_y}`].status === "wall") {
+    if (!boardArray[new_x - 1] || !boardArray[new_x - 1][new_y] || nodes[`${prefix}${new_x - 1}-${new_y}`].status === "wall") {
       results[0] = false;
     }
 
-    if (!boardArray[new_x + 1] || !boardArray[new_x + 1][new_y] || nodes[`${new_x + 1}-${new_y}`].status === "wall") {
+    if (!boardArray[new_x + 1] || !boardArray[new_x + 1][new_y] || nodes[`${prefix}${new_x + 1}-${new_y}`].status === "wall") {
       results[1] = false;
     }
 
-    if (!boardArray[new_x] || !boardArray[new_x][new_y - 1] || nodes[`${new_x}-${new_y - 1}`].status === "wall") {
+    if (!boardArray[new_x] || !boardArray[new_x][new_y - 1] || nodes[`${prefix}${new_x}-${new_y - 1}`].status === "wall") {
       results[2] = false;
     }
 
-    if (!boardArray[new_x] || !boardArray[new_x][new_y + 1] || nodes[`${new_x}-${new_y + 1}`].status === "wall") {
+    if (!boardArray[new_x] || !boardArray[new_x][new_y + 1] || nodes[`${prefix}${new_x}-${new_y + 1}`].status === "wall") {
       results[3] = false;
     }
   })
   
-  if (results[0]) neighbors.push(`${(x - 1).toString()}-${y.toString()}`)
-  if (results[1]) neighbors.push(`${(x + 1).toString()}-${y.toString()}`)
-  if (results[2]) neighbors.push(`${(x).toString()}-${(y - 1).toString()}`)
-  if (results[3]) neighbors.push(`${(x).toString()}-${(y + 1).toString()}`)
+  if (results[0]) neighbors.push(`${prefix}${(x - 1).toString()}-${y.toString()}`)
+  if (results[1]) neighbors.push(`${prefix}${(x + 1).toString()}-${y.toString()}`)
+  if (results[2]) neighbors.push(`${prefix}${(x).toString()}-${(y - 1).toString()}`)
+  if (results[3]) neighbors.push(`${prefix}${(x).toString()}-${(y + 1).toString()}`)
 
   // if (boardArray[x - 1] && boardArray[x - 1][y]) {
   //   potentialNeighbor = `${(x - 1).toString()}-${y.toString()}`
@@ -3447,8 +3478,8 @@ function manhattanDistance(nodeOne, nodeTwo) {
   let nodeOneCoordinates = nodeOne.id.split("-").map(ele => parseInt(ele));
   let nodeTwoCoordinates = nodeTwo.id.split("-").map(ele => parseInt(ele));
   if (nodeOne.id[0] === "b") {
-    currentCoordinates = nodeOne.id.slice(7).split("-").map(ele => parseInt(ele));
-    targetCoordinates = nodeTwo.id.slice(7).split("-").map(ele => parseInt(ele));
+    nodeOneCoordinates = nodeOne.id.slice(7).split("-").map(ele => parseInt(ele));
+    nodeTwoCoordinates = nodeTwo.id.slice(7).split("-").map(ele => parseInt(ele));
   }
   let xOne = nodeOneCoordinates[0];
   let xTwo = nodeTwoCoordinates[0];
@@ -3506,8 +3537,8 @@ function bidirectional(nodes, start, target, nodesToAnimate, boardArray, startNo
     }
     visitedNodes[currentNode.id] = true;
     visitedNodes[secondCurrentNode.id] = true;
-    updateNeighbors(nodes, currentNode, boardArray, target, name, start, heuristic);
-    updateNeighborsTwo(nodes, secondCurrentNode, boardArray, start, name, target, heuristic);
+    updateNeighbors(nodes, currentNode, boardArray, startNodesRelative, target, name, start, heuristic);
+    updateNeighborsTwo(nodes, secondCurrentNode, boardArray, startNodesRelative, start, name, target, heuristic);
   }
 }
 
@@ -3535,15 +3566,15 @@ function closestNodeTwo(nodes, unvisitedNodes) {
   return currentClosest;
 }
 
-function updateNeighbors(nodes, node, boardArray, target, name, start, heuristic) {
-  let neighbors = getNeighbors(node.id, nodes, boardArray);
+function updateNeighbors(nodes, node, boardArray, startNodesRelative, target, name, start, heuristic) {
+  let neighbors = getNeighbors(node.id, nodes, boardArray, startNodesRelative);
   for (let neighbor of neighbors) {
     updateNode(node, nodes[neighbor], nodes[target], name, nodes, nodes[start], heuristic, boardArray);
   }
 }
 
-function updateNeighborsTwo(nodes, node, boardArray, target, name, start, heuristic) {
-  let neighbors = getNeighbors(node.id, nodes, boardArray);
+function updateNeighborsTwo(nodes, node, boardArray, startNodesRelative, target, name, start, heuristic) {
+  let neighbors = getNeighbors(node.id, nodes, boardArray, startNodesRelative);
   for (let neighbor of neighbors) {
     updateNodeTwo(node, nodes[neighbor], nodes[target], name, nodes, nodes[start], heuristic, boardArray);
   }
@@ -3591,27 +3622,27 @@ function getNeighbors(id, nodes, boardArray, startNodesRelative) {
     let new_x = x + parseInt(potentialPos.split("^")[0]),
         new_y = y + parseInt(potentialPos.split("^")[1])
     
-    if (!boardArray[new_x - 1] || !boardArray[new_x - 1][new_y] || nodes[`${new_x - 1}-${new_y}`].status === "wall") {
+    if (!boardArray[new_x - 1] || !boardArray[new_x - 1][new_y] || nodes[`${prefix}${new_x - 1}-${new_y}`].status === "wall") {
       results[0] = false;
     }
 
-    if (!boardArray[new_x + 1] || !boardArray[new_x + 1][new_y] || nodes[`${new_x + 1}-${new_y}`].status === "wall") {
+    if (!boardArray[new_x + 1] || !boardArray[new_x + 1][new_y] || nodes[`${prefix}${new_x + 1}-${new_y}`].status === "wall") {
       results[1] = false;
     }
 
-    if (!boardArray[new_x] || !boardArray[new_x][new_y - 1] || nodes[`${new_x}-${new_y - 1}`].status === "wall") {
+    if (!boardArray[new_x] || !boardArray[new_x][new_y - 1] || nodes[`${prefix}${new_x}-${new_y - 1}`].status === "wall") {
       results[2] = false;
     }
 
-    if (!boardArray[new_x] || !boardArray[new_x][new_y + 1] || nodes[`${new_x}-${new_y + 1}`].status === "wall") {
+    if (!boardArray[new_x] || !boardArray[new_x][new_y + 1] || nodes[`${prefix}${new_x}-${new_y + 1}`].status === "wall") {
       results[3] = false;
     }
   })
   
-  if (results[0]) neighbors.push(`${(x - 1).toString()}-${y.toString()}`)
-  if (results[1]) neighbors.push(`${(x + 1).toString()}-${y.toString()}`)
-  if (results[2]) neighbors.push(`${(x).toString()}-${(y - 1).toString()}`)
-  if (results[3]) neighbors.push(`${(x).toString()}-${(y + 1).toString()}`)
+  if (results[0]) neighbors.push(`${prefix}${(x - 1).toString()}-${y.toString()}`)
+  if (results[1]) neighbors.push(`${prefix}${(x + 1).toString()}-${y.toString()}`)
+  if (results[2]) neighbors.push(`${prefix}${(x).toString()}-${(y - 1).toString()}`)
+  if (results[3]) neighbors.push(`${prefix}${(x).toString()}-${(y + 1).toString()}`)
   return neighbors;
 }
 
@@ -3899,7 +3930,7 @@ function weightedManhattanDistance(nodeOne, nodeTwo, nodes) {
 module.exports = bidirectional;
 
 },{"./astar":13}],15:[function(require,module,exports){
-function unweightedSearchAlgorithm(nodes, start, target, nodesToAnimate, boardArray, name) {
+function unweightedSearchAlgorithm(nodes, start, target, nodesToAnimate, boardArray, startNodesRelative, name) {
   if (!start || !target || start === target) {
     return false;
   }
@@ -3913,7 +3944,7 @@ function unweightedSearchAlgorithm(nodes, start, target, nodesToAnimate, boardAr
     if (currentNode.id === target) {
       return "success";
     }
-    let currentNeighbors = getNeighbors(currentNode.id, nodes, boardArray, name);
+    let currentNeighbors = getNeighbors(currentNode.id, nodes, boardArray, startNodesRelative, name);
     currentNeighbors.forEach(neighbor => {
       if (!exploredNodes[neighbor]) {
         if (name === "bfs") exploredNodes[neighbor] = true;
@@ -3925,7 +3956,7 @@ function unweightedSearchAlgorithm(nodes, start, target, nodesToAnimate, boardAr
   return false;
 }
 
-function getNeighbors(id, nodes, boardArray, name) {
+function getNeighbors(id, nodes, boardArray, startNodesRelative, name) {
   let coordinates = id.split("-");
   let prefix = ""
   if (id[0] === "b") {
@@ -3936,46 +3967,100 @@ function getNeighbors(id, nodes, boardArray, name) {
   let y = parseInt(coordinates[1]);
   let neighbors = [];
   let potentialNeighbor;
-  if (boardArray[x - 1] && boardArray[x - 1][y]) {
-    potentialNeighbor = `${prefix}${(x - 1).toString()}-${y.toString()}`
-    if (nodes[potentialNeighbor].status !== "wall") {
-      if (name === "bfs") {
-        neighbors.push(potentialNeighbor);
-      } else {
-        neighbors.unshift(potentialNeighbor);
-      }
+
+  // four direction
+  let results = [true, true, true, true]
+
+  startNodesRelative.forEach((potentialPos) => {
+    let new_x = x + parseInt(potentialPos.split("^")[0]),
+        new_y = y + parseInt(potentialPos.split("^")[1])
+    
+    if (!boardArray[new_x - 1] || !boardArray[new_x - 1][new_y] || nodes[`${prefix}${new_x - 1}-${new_y}`].status === "wall") {
+      results[0] = false;
+    }
+
+    if (!boardArray[new_x + 1] || !boardArray[new_x + 1][new_y] || nodes[`${prefix}${new_x + 1}-${new_y}`].status === "wall") {
+      results[1] = false;
+    }
+
+    if (!boardArray[new_x] || !boardArray[new_x][new_y - 1] || nodes[`${prefix}${new_x}-${new_y - 1}`].status === "wall") {
+      results[2] = false;
+    }
+
+    if (!boardArray[new_x] || !boardArray[new_x][new_y + 1] || nodes[`${prefix}${new_x}-${new_y + 1}`].status === "wall") {
+      results[3] = false;
+    }
+  })
+  
+  if (results[0]) {
+    if (name === "bfs") {
+      neighbors.push(`${prefix}${(x - 1).toString()}-${y.toString()}`);
+    } else {
+      neighbors.unshift(`${prefix}${(x - 1).toString()}-${y.toString()}`);
     }
   }
-  if (boardArray[x][y + 1]) {
-    potentialNeighbor = `${prefix}${x.toString()}-${(y + 1).toString()}`
-    if (nodes[potentialNeighbor].status !== "wall") {
-      if (name === "bfs") {
-        neighbors.push(potentialNeighbor);
-      } else {
-        neighbors.unshift(potentialNeighbor);
-      }
+  if (results[1]) {
+    if (name === "bfs") {
+      neighbors.push(`${prefix}${(x + 1).toString()}-${y.toString()}`);
+    } else {
+      neighbors.unshift(`${prefix}${(x + 1).toString()}-${y.toString()}`);
     }
   }
-  if (boardArray[x + 1] && boardArray[x + 1][y]) {
-    potentialNeighbor = `${prefix}${(x + 1).toString()}-${y.toString()}`
-    if (nodes[potentialNeighbor].status !== "wall") {
-      if (name === "bfs") {
-        neighbors.push(potentialNeighbor);
-      } else {
-        neighbors.unshift(potentialNeighbor);
-      }
+  if (results[2]) {
+    if (name === "bfs") {
+      neighbors.push(`${prefix}${x.toString()}-${(y - 1).toString()}`);
+    } else {
+      neighbors.unshift(`${prefix}${x.toString()}-${(y - 1).toString()}`);
     }
   }
-  if (boardArray[x][y - 1]) {
-    potentialNeighbor = `${prefix}${x.toString()}-${(y - 1).toString()}`
-    if (nodes[potentialNeighbor].status !== "wall") {
-      if (name === "bfs") {
-        neighbors.push(potentialNeighbor);
-      } else {
-        neighbors.unshift(potentialNeighbor);
-      }
+  if (results[3]) {
+    if (name === "bfs") {
+      neighbors.push(`${prefix}${x.toString()}-${(y + 1).toString()}`);
+    } else {
+      neighbors.unshift(`${prefix}${x.toString()}-${(y + 1).toString()}`);
     }
   }
+ 
+  // if (boardArray[x - 1] && boardArray[x - 1][y]) {
+  //   potentialNeighbor = `${prefix}${(x - 1).toString()}-${y.toString()}`
+  //   if (nodes[potentialNeighbor].status !== "wall") {
+  //     if (name === "bfs") {
+  //       neighbors.push(potentialNeighbor);
+  //     } else {
+  //       neighbors.unshift(potentialNeighbor);
+  //     }
+  //   }
+  // }
+  // if (boardArray[x][y + 1]) {
+  //   potentialNeighbor = `${prefix}${x.toString()}-${(y + 1).toString()}`
+  //   if (nodes[potentialNeighbor].status !== "wall") {
+  //     if (name === "bfs") {
+  //       neighbors.push(potentialNeighbor);
+  //     } else {
+  //       neighbors.unshift(potentialNeighbor);
+  //     }
+  //   }
+  // }
+  // if (boardArray[x + 1] && boardArray[x + 1][y]) {
+  //   potentialNeighbor = `${prefix}${(x + 1).toString()}-${y.toString()}`
+  //   if (nodes[potentialNeighbor].status !== "wall") {
+  //     if (name === "bfs") {
+  //       neighbors.push(potentialNeighbor);
+  //     } else {
+  //       neighbors.unshift(potentialNeighbor);
+  //     }
+  //   }
+  // }
+  // if (boardArray[x][y - 1]) {
+  //   potentialNeighbor = `${prefix}${x.toString()}-${(y - 1).toString()}`
+  //   if (nodes[potentialNeighbor].status !== "wall") {
+  //     if (name === "bfs") {
+  //       neighbors.push(potentialNeighbor);
+  //     } else {
+  //       neighbors.unshift(potentialNeighbor);
+  //     }
+  //   }
+  // }
   return neighbors;
 }
 
@@ -4004,12 +4089,12 @@ function weightedSearchAlgorithm(nodes, start, target, nodesToAnimate, boardArra
     currentNode.status = "visited";
     if (currentNode.id === target) return "success!";
     if (name === "CLA" || name === "greedy") {
-      updateNeighbors(nodes, currentNode, boardArray, target, name, start, heuristic);
+      updateNeighbors(nodes, currentNode, boardArray, startNodesRelative, target, name, start, heuristic);
     } else if (name === "dijkstra") {
-      updateNeighbors(nodes, currentNode, boardArray);
+      updateNeighbors(nodes, currentNode, boardArray, startNodesRelative);
     // update
     } else if (name === "floyd_warshall") {
-      updateNeighbors(nodes, currentNode, boardArray);
+      updateNeighbors(nodes, currentNode, boardArray, startNodesRelative);
     }
   }
 }
@@ -4026,8 +4111,8 @@ function closestNode(nodes, unvisitedNodes) {
   return currentClosest;
 }
 
-function updateNeighbors(nodes, node, boardArray, target, name, start, heuristic) {
-  let neighbors = getNeighbors(node.id, nodes, boardArray);
+function updateNeighbors(nodes, node, boardArray, startNodesRelative, target, name, start, heuristic) {
+  let neighbors = getNeighbors(node.id, nodes, boardArray, startNodesRelative);
   for (let neighbor of neighbors) {
     if (target) {
       updateNode(node, nodes[neighbor], nodes[target], name, nodes, nodes[start], heuristic, boardArray);
@@ -4073,7 +4158,7 @@ function updateNode(currentNode, targetNode, actualTargetNode, name, nodes, actu
   }
 }
 
-function getNeighbors(id, nodes, boardArray) {
+function getNeighbors(id, nodes, boardArray, startNodesRelative) {
   let prefix = ""
   let coordinates = id.split("-");
   if (id[0] === "b") {
@@ -4084,22 +4169,52 @@ function getNeighbors(id, nodes, boardArray) {
   let y = parseInt(coordinates[1]);
   let neighbors = [];
   let potentialNeighbor;
-  if (boardArray[x - 1] && boardArray[x - 1][y]) {
-    potentialNeighbor = `${prefix}${(x - 1).toString()}-${y.toString()}`
-    if (nodes[potentialNeighbor].status !== "wall") neighbors.push(potentialNeighbor);
-  }
-  if (boardArray[x + 1] && boardArray[x + 1][y]) {
-    potentialNeighbor = `${prefix}${(x + 1).toString()}-${y.toString()}`
-    if (nodes[potentialNeighbor].status !== "wall") neighbors.push(potentialNeighbor);
-  }
-  if (boardArray[x][y - 1]) {
-    potentialNeighbor = `${prefix}${x.toString()}-${(y - 1).toString()}`
-    if (nodes[potentialNeighbor].status !== "wall") neighbors.push(potentialNeighbor);
-  }
-  if (boardArray[x][y + 1]) {
-    potentialNeighbor = `${prefix}${x.toString()}-${(y + 1).toString()}`
-    if (nodes[potentialNeighbor].status !== "wall") neighbors.push(potentialNeighbor);
-  }
+  // four direction
+  let results = [true, true, true, true]
+
+  startNodesRelative.forEach((potentialPos) => {
+    let new_x = x + parseInt(potentialPos.split("^")[0]),
+        new_y = y + parseInt(potentialPos.split("^")[1])
+    
+    if (!boardArray[new_x - 1] || !boardArray[new_x - 1][new_y] || nodes[`${prefix}${new_x - 1}-${new_y}`].status === "wall") {
+      results[0] = false;
+    }
+
+    if (!boardArray[new_x + 1] || !boardArray[new_x + 1][new_y] || nodes[`${prefix}${new_x + 1}-${new_y}`].status === "wall") {
+      results[1] = false;
+    }
+
+    if (!boardArray[new_x] || !boardArray[new_x][new_y - 1] || nodes[`${prefix}${new_x}-${new_y - 1}`].status === "wall") {
+      results[2] = false;
+    }
+
+    if (!boardArray[new_x] || !boardArray[new_x][new_y + 1] || nodes[`${prefix}${new_x}-${new_y + 1}`].status === "wall") {
+      results[3] = false;
+    }
+  })
+  
+  if (results[0]) neighbors.push(`${prefix}${(x - 1).toString()}-${y.toString()}`)
+  if (results[1]) neighbors.push(`${prefix}${(x + 1).toString()}-${y.toString()}`)
+  if (results[2]) neighbors.push(`${prefix}${(x).toString()}-${(y - 1).toString()}`)
+  if (results[3]) neighbors.push(`${prefix}${(x).toString()}-${(y + 1).toString()}`)
+
+
+  // if (boardArray[x - 1] && boardArray[x - 1][y]) {
+  //   potentialNeighbor = `${prefix}${(x - 1).toString()}-${y.toString()}`
+  //   if (nodes[potentialNeighbor].status !== "wall") neighbors.push(potentialNeighbor);
+  // }
+  // if (boardArray[x + 1] && boardArray[x + 1][y]) {
+  //   potentialNeighbor = `${prefix}${(x + 1).toString()}-${y.toString()}`
+  //   if (nodes[potentialNeighbor].status !== "wall") neighbors.push(potentialNeighbor);
+  // }
+  // if (boardArray[x][y - 1]) {
+  //   potentialNeighbor = `${prefix}${x.toString()}-${(y - 1).toString()}`
+  //   if (nodes[potentialNeighbor].status !== "wall") neighbors.push(potentialNeighbor);
+  // }
+  // if (boardArray[x][y + 1]) {
+  //   potentialNeighbor = `${prefix}${x.toString()}-${(y + 1).toString()}`
+  //   if (nodes[potentialNeighbor].status !== "wall") neighbors.push(potentialNeighbor);
+  // }
   return neighbors;
 }
 
