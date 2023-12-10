@@ -804,6 +804,7 @@ Board1.prototype.clearPath = function(clickedButton) {
   }
 
   document.getElementById("startButtonStart1").onclick = () => {
+    const t0 = performance.now();
     if (!this.currentAlgorithm) {
       document.getElementById("startButtonStart1").innerHTML = '<button class="btn btn-default navbar-btn" type="button">Pick an Algorithm!</button>'
     } else {
@@ -871,6 +872,9 @@ Board1.prototype.clearPath = function(clickedButton) {
         this.algoDone = true;
       }
     }
+    const t1 = performance.now();
+    const tt = t1 - t0;
+    document.getElementById("timeTaken1").innerHTML = `Time taken : ${tt.toFixed(2)}`;
   }
 
   this.algoDone = false;
@@ -1233,7 +1237,7 @@ Board1.prototype.toggleButtons = function() {
       }
       const t1 = performance.now();
       const tt = t1 - t0;
-      document.getElementById("timeTaken").innerHTML = `Time taken : ${tt.toFixed(2)}`;
+      document.getElementById("timeTaken1").innerHTML = `Time taken : ${tt.toFixed(2)}`;
     }
 
     document.getElementById("adjustFast").onclick = () => {
@@ -2017,6 +2021,7 @@ Board2.prototype.clearPath = function(clickedButton) {
   }
 
   document.getElementById("startButtonStart2").onclick = () => {
+    const t0 = performance.now();
     if (!this.currentAlgorithm) {
       document.getElementById("startButtonStart2").innerHTML = '<button class="btn btn-default navbar-btn" type="button">Pick an Algorithm!</button>'
     } else {
@@ -2078,6 +2083,9 @@ Board2.prototype.clearPath = function(clickedButton) {
         this.algoDone = true;
       }
     }
+    const t1 = performance.now();
+    const tt = t1 - t0;
+    document.getElementById("timeTaken2").innerHTML = `Time taken : ${tt.toFixed(2)}`;
   }
 
   this.algoDone = false;
@@ -2371,6 +2379,7 @@ Board2.prototype.toggleButtons = function() {
     this.buttonsOn = true;
 
     document.getElementById("startButtonStart2").onclick = () => {
+      const t0 = performance.now();
       if (!this.currentAlgorithm) {
         document.getElementById("startButtonStart2").innerHTML = '<button class="btn btn-default navbar-btn" type="button">Pick an Algorithm!</button>'
       } else {
@@ -2435,6 +2444,9 @@ Board2.prototype.toggleButtons = function() {
           this.algoDone = true;
         }
       }
+      const t1 = performance.now();
+      const tt = t1 - t0;
+      document.getElementById("timeTaken2").innerHTML = `Time taken : ${tt.toFixed(2)}`;
     }
 
     document.getElementById("adjustFast").onclick = () => {

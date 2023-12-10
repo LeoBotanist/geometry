@@ -288,7 +288,7 @@
   text-decoration: line-through;
 }
 
-#algorithmDescriptor, #timeTaken {
+#algorithmDescriptor, #timeTaken1, #timeTaken2 {
   text-align: center;
   color: #34495e;
   padding: 15px 25px 15px 25px;
