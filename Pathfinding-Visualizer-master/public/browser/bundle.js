@@ -1699,9 +1699,10 @@ Board2.prototype.addEventListeners = function() {
                 board.redoAlgorithm();
               }
             }
-          } else if (board.mouseDown) {
-            board.changeNormalNode(currentNode);
-          }
+          } 
+          // else if (board.mouseDown) {
+          //   board.changeNormalNode(currentNode);
+          // }
         }
       }
       currentElement.onmouseleave = () => {
@@ -2022,13 +2023,26 @@ Board2.prototype.clearPath = function(clickedButton) {
       let success;
       if (this.currentAlgorithm === "bidirectional") {
         if (!this.numberOfObjects) {
-          success = bidirectional(this.nodes, this.start, this.target, this.nodesToAnimate, this.boardArray, this.currentAlgorithm, this.currentHeuristic, this);
+          success = bidirectional(this.nodes, this.start, this.target, this.nodesToAnimate, this.boardArray, this.startNodesRelative, this.currentAlgorithm, this.currentHeuristic, this);
           launchAnimations(this, success, "weighted");
         } else {
           this.isObject = true;
         }
         this.algoDone = true;
-      } else if (this.currentAlgorithm === "astar") {
+      } 
+      else if (this.currentAlgorithm === "floyd_warshall") {
+        if (!this.numberOfObjects) {
+          success = weightedSearchAlgorithm(this.nodes, this.start, this.target, this.nodesToAnimate, this.boardArray, this.startNodesRelative, this.currentAlgorithm, this.currentHeuristic);
+          launchAnimations(this, success, "weighted");
+        } 
+        else {
+          this.isObject = true;
+          success = weightedSearchAlgorithm(this.nodes, this.start, this.object, this.objectNodesToAnimate, this.boardArray, this.startNodesRelative, this.currentAlgorithm, this.currentHeuristic);
+          launchAnimations(this, success, "weighted", "object", this.currentAlgorithm, this.currentHeuristic);
+        }
+        this.algoDone = true;
+      }
+      else if (this.currentAlgorithm === "astar") {
         if (!this.numberOfObjects) {
           success = weightedSearchAlgorithm(this.nodes, this.start, this.target, this.nodesToAnimate, this.boardArray, this.startNodesRelative, this.currentAlgorithm, this.currentHeuristic);
           launchAnimations(this, success, "weighted");
@@ -2141,7 +2155,22 @@ Board2.prototype.instantAlgorithm = function() {
       this.isObject = true;
     }
     this.algoDone = true;
-  } else if (this.currentAlgorithm === "astar") {
+  } 
+  
+  // update
+  else if (this.currentAlgorithm === "floyd_warshall") {
+    if (!this.numberOfObjects) {
+      success = weightedSearchAlgorithm(this.nodes, this.start, this.target, this.nodesToAnimate, this.boardArray, this.startNodesRelative, this.currentAlgorithm, this.currentHeuristic);
+      launchInstantAnimations(this, success, "weighted");
+    } else {
+      this.isObject = true;
+      // success = weightedSearchAlgorithm(this.nodes, this.start, this.object, this.objectNodesToAnimate, this.boardArray, this.currentAlgorithm, this.currentHeuristic);
+      // launchInstantAnimations(this, success, "weighted", "object", this.currentAlgorithm);
+    }
+    this.algoDone = true;
+  }
+  // 
+  else if (this.currentAlgorithm === "astar") {
     if (!this.numberOfObjects) {
       success = weightedSearchAlgorithm(this.nodes, this.start, this.target, this.nodesToAnimate, this.boardArray, this.startNodesRelative, this.currentAlgorithm, this.currentHeuristic);
       launchInstantAnimations(this, success, "weighted");
@@ -2223,6 +2252,11 @@ Board2.prototype.changeStartNodeImages = function() {
   } else if (this.currentAlgorithm === "bidirectional") {
     name = "Bidirectional Swarm Algorithm";
   }
+  // update
+  else if (this.currentAlgorithm === "floyd_warshall") {
+    name = "Floyd-Warshall";
+  }
+  //
   if (unweighted.includes(this.currentAlgorithm)) {
     if (this.currentAlgorithm === "dfs") {
       document.getElementById("algorithmDescriptor").innerHTML = `${name} is <i><b>unweighted</b></i> and <i><b>does not guarantee</b></i> the shortest path!`;
@@ -2246,6 +2280,19 @@ Board2.prototype.changeStartNodeImages = function() {
       document.styleSheets["1"].rules[j].style.backgroundImage = backgroundImage.replace("spaceship", "triangle");
     }
   }
+
+  // update
+  if (this.currentAlgorithm === "floyd_warshall") {
+
+    document.getElementById("algorithmDescriptor").innerHTML = `${name} is <i><b>weighted</b></i> and <i><b>does not guarantee</b></i> the shortest path!`;
+    document.getElementById("bombLegend").className = "strikethrough";
+    document.getElementById("startButtonAddObject").className = "navbar-inverse navbar-nav disabledA";
+  } else {
+    document.getElementById("bombLegend").className = "";
+    document.getElementById("startButtonAddObject").className = "navbar-inverse navbar-nav";
+  }
+  // 
+
   if (this.currentAlgorithm === "bidirectional") {
 
     document.getElementById("algorithmDescriptor").innerHTML = `${name} is <i><b>weighted</b></i> and <i><b>does not guarantee</b></i> the shortest path!`;
@@ -2338,7 +2385,21 @@ Board2.prototype.toggleButtons = function() {
             launchAnimations(this, success, "weighted");
           }
           this.algoDone = true;
-        } else if (this.currentAlgorithm === "astar") {
+        } 
+        // update
+        else if (this.currentAlgorithm === "floyd_warshall") {
+          if (!this.numberOfObjects) {
+            success = weightedSearchAlgorithm(this.nodes, this.start, this.target, this.nodesToAnimate, this.boardArray, this.startNodesRelative, this.currentAlgorithm, this.currentHeuristic, this);
+            launchAnimations(this, success, "weighted");
+          } else {
+            this.isObject = true;
+            success = weightedSearchAlgorithm(this.nodes, this.start, this.object, this.nodesToAnimate, this.boardArray, this.startNodesRelative, this.currentAlgorithm, this.currentHeuristic, this);
+            launchAnimations(this, success, "weighted");
+          }
+          this.algoDone = true;
+        }
+        // 
+        else if (this.currentAlgorithm === "astar") {
           if (!this.numberOfObjects) {
             success = weightedSearchAlgorithm(this.nodes, this.start, this.target, this.nodesToAnimate, this.boardArray, this.startNodesRelative, this.currentAlgorithm, this.currentHeuristic);
             launchAnimations(this, success, "weighted");
@@ -2428,7 +2489,7 @@ Board2.prototype.toggleButtons = function() {
 
     // update
     document.getElementById("startButtonFloyd2").onclick = () => {
-      document.getElementById("startButtonStart1").innerHTML = '<button id="actualStartButton" class="btn btn-default navbar-btn" type="button">Visualize Floyd-Warshall!</button>'
+      document.getElementById("startButtonStart2").innerHTML = '<button id="actualStartButton2" class="btn btn-default navbar-btn" type="button">Visualize Floyd-Warshall!</button>'
       this.currentAlgorithm = "floyd_warshall";
       // this.currentHeuristic = "manhattanDistance"
       this.changeStartNodeImages();
@@ -2568,6 +2629,23 @@ Board2.prototype.toggleButtons = function() {
       mazeGenerationAnimations(this);
     }
 
+    document.getElementById("startButtonAddStart2").onclick = () => {
+
+      let initial_start = this.start.slice(7).split("-");
+      let r = parseInt(initial_start[0]), c = parseInt(initial_start[1])
+      while(this.nodes[`board2_${r}-${c}`].status === "start") {
+        r += 1;
+      }
+      this.nodes[`board2_${r}-${c}`].status = "start";
+      document.getElementById(`board2_${r}-${c}`).className = "start";
+
+      this.startNodes.push(`board2_${r}-${c}`);
+      // console.log(this.startNodes);
+      // console.log(this.start);
+      let initial_r = parseInt(this.start.slice(7).split("-")[0]), initial_c = parseInt(this.start.slice(7).split("-")[1])
+      this.startNodesRelative.push(`${r - initial_r}^${c - initial_c}`)
+    }
+
     document.getElementById("startButtonAddObject2").onclick = () => {
       let innerHTML = document.getElementById("startButtonAddObject2").innerHTML;
       if (this.currentAlgorithm !== "bidirectional") {
@@ -2611,6 +2689,8 @@ Board2.prototype.toggleButtons = function() {
     document.getElementById("startButtonCreateMazeFour").className = "navbar-inverse navbar-nav";
     document.getElementById("startButtonCreateMazeWeights").className = "navbar-inverse navbar-nav";
     document.getElementById("startStairDemonstration").className = "navbar-inverse navbar-nav";
+     // update
+     document.getElementById("startButtonFloyd1").className = "navbar-inverse navbar-nav";
     document.getElementById("startButtonDFS2").className = "navbar-inverse navbar-nav";
     document.getElementById("startButtonBFS2").className = "navbar-inverse navbar-nav";
     document.getElementById("startButtonDijkstra2").className = "navbar-inverse navbar-nav";
@@ -2626,6 +2706,7 @@ Board2.prototype.toggleButtons = function() {
 
   } else {
     this.buttonsOn = false;
+    console.log("this buttons not on!")
     document.getElementById("startButtonDFS2").onclick = null;
     document.getElementById("startButtonBFS2").onclick = null;
     document.getElementById("startButtonDijkstra2").onclick = null;
@@ -2635,6 +2716,8 @@ Board2.prototype.toggleButtons = function() {
     document.getElementById("startButtonAStar22").onclick = null;
     document.getElementById("startButtonAStar32").onclick = null;
     document.getElementById("startButtonBidirectional2").onclick = null;
+    // update
+    document.getElementById("startButtonFloyd1").onclick = null;
     document.getElementById("startButtonCreateMazeOne").onclick = null;
     document.getElementById("startButtonCreateMazeTwo").onclick = null;
     document.getElementById("startButtonCreateMazeThree").onclick = null;
