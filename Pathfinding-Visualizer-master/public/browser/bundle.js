@@ -1164,6 +1164,7 @@ Board1.prototype.toggleButtons = function() {
     console.log("this button is on!")
 
     document.getElementById("startButtonStart1").onclick = () => {
+      const t0 = performance.now();
       if (!this.currentAlgorithm) {
         document.getElementById("startButtonStart1").innerHTML = '<button class="btn btn-default navbar-btn" type="button">Pick an Algorithm!</button>'
       } else {
@@ -1230,6 +1231,9 @@ Board1.prototype.toggleButtons = function() {
           this.algoDone = true;
         }
       }
+      const t1 = performance.now();
+      const tt = t1 - t0;
+      document.getElementById("timeTaken").innerHTML = `Time taken : ${tt.toFixed(2)}`;
     }
 
     document.getElementById("adjustFast").onclick = () => {
